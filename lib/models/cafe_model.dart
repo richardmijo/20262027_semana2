@@ -19,7 +19,8 @@ class CafeModel {
     this.tieneWifi = true,
   });
 
-  //serializar
+  
+
   factory CafeModel.fromJson(Map<String, dynamic> json) {
     final rawId = json['id'];
     final int parsedId = rawId is int
