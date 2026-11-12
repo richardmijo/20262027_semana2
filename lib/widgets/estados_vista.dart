@@ -76,13 +76,24 @@ class EstadoVacio extends StatelessWidget {
 
   const EstadoVacio({
     super.key,
-    this.mensaje = 'NO hay cafeterias que coincidan con el filtro',
+    this.mensaje = 'No hay cafeterías que coincidan con el filtro.',
     required this.onAccion,
-    this.etiquetaAccion = 'Quitar filtro de WiFi',
+    this.etiquetaAccion = 'Quitar filtro de Wi-Fi',
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.search_off, size: 64, color: Colors.orange),
+          const SizedBox(height: 12),
+          Text(mensaje, style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 8),
+          TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
+        ],
+      ),
+    );
   }
 }
