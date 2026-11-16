@@ -19,7 +19,10 @@ class CafeModel {
     this.tieneWifi = true,
   });
 
+<<<<<<< HEAD
   //serializar
+=======
+>>>>>>> main
   factory CafeModel.fromJson(Map<String, dynamic> json) {
     final rawId = json['id'];
     final int parsedId = rawId is int
@@ -29,14 +32,22 @@ class CafeModel {
     final List<String> parsedIngredients = rawIngredients is List
         ? rawIngredients.map((item) => item.toString()).toList()
         : [];
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
     return CafeModel(
       id: parsedId,
       nombre: (json['title'] ?? json['nombre'] ?? 'Cafe Especial') as String,
       descripcion:
           (json['description'] ??
           json['descripcion'] ??
+<<<<<<< HEAD
           'Delicioso cafe tostado'),
+=======
+          'Delicioso cafe tostado.'),
+      imagenUrl: (json['image'] ?? json['imagenUrl']) as String?,
+>>>>>>> main
       ingredientes: parsedIngredients,
       precio:
           (json['precio'] as num?)?.toDouble() ??
@@ -49,5 +60,9 @@ class CafeModel {
   }
 
   String get resumenIngredients =>
+<<<<<<< HEAD
       ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(',');
+=======
+      ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(', ');
+>>>>>>> main
 }

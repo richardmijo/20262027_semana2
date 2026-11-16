@@ -19,8 +19,13 @@ class CafeService {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
+<<<<<<< HEAD
       ), //BaseOptions
     ); //Dio
+=======
+      ),
+    );
+>>>>>>> main
 
     _dio.interceptors.add(
       InterceptorsWrapper(
@@ -54,7 +59,11 @@ class CafeService {
     } on DioException catch (dioError) {
       throw Exception(dioError);
     } catch (e) {
+<<<<<<< HEAD
       throw Exception('Ocurrio un error inesperado al procesar los datos');
+=======
+      throw Exception('Ocurrio un erros inesperado al procesar los datos');
+>>>>>>> main
     }
   }
 }
