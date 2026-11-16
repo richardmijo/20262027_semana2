@@ -3,10 +3,11 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 
 import '../models/cafe_model.dart';
+
 class CafeService {
   late final Dio _dio;
-  static const _baseUrl = 'https://api.sampleapis.com';
-  static const _coffeEndpoint = '/coffee/hot';
+  static const String _baseUrl = 'https://api.sampleapis.com';
+  static const String _coffeEndpoint = '/coffee/hot';
 
   CafeService() {
     _dio = Dio(
@@ -21,37 +22,41 @@ class CafeService {
       ),
     );
 
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        log('Dio request');
-        handler.next(options);
-      },
-      onResponse: (response, handler) {
-        log('Dio response');
-        handler.next(response);
-      },
-      onError: (error, handler) {
-        log('Dio error');
-        handler.next(error);
-      },
-    ));
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          log('Dio request');
+          return handler.next(options);
+        },
+        onResponse: (options, handler) {
+          log('Dio response');
+          return handler.next(options);
+        },
+        onError: (options, handler) {
+          log('Dio error');
+          return handler.next(options);
+        },
+      ),
+    );
   }
 
   Future<List<CafeModel>> obtenerCafes() async {
     try {
       final response = await _dio.get(_coffeEndpoint);
-
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data as List<dynamic>;
-
         return data
             .map((item) => CafeModel.fromJson(item as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Error al obtener los cafés');
+        throw Exception(
+          'El servidor respondio con codigo ${response.statusCode}',
+        );
       }
+    } on DioException catch (dioError) {
+      throw Exception(dioError);
     } catch (e) {
-      throw Exception('Ocurrió un error inesperado al procesar los datos');
+      throw Exception('Ocurrio un error inesperado al procesar los datos');
     }
   }
 }
