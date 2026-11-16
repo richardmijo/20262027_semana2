@@ -9,15 +9,15 @@ class CafeService {
   static const String _baseUrl = 'https://api.sampleapis.com';
   static const String _coffeEndpoint = '/coffee/hot';
 
-  CafeService(){
+  CafeService() {
     _dio = Dio(
       BaseOptions(
         baseUrl: _baseUrl,
         connectTimeout: Duration(seconds: 8),
         receiveTimeout: Duration(seconds: 8),
         headers: {
-          'Accept' : 'aplications/json',
-          'Content-Type' : 'aplications/json'
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
         },
       ),
     );
@@ -26,13 +26,13 @@ class CafeService {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           log('Dio request');
-          return handler.next(options);  
+          return handler.next(options);
         },
-        onResponse: (options, handler){
+        onResponse: (options, handler) {
           log('Dio response');
           return handler.next(options);
         },
-        onError: (options, handler){
+        onError: (options, handler) {
           log('Dio error');
           return handler.next(options);
         },
@@ -40,19 +40,21 @@ class CafeService {
     );
   }
 
-  Future<List<CafeModel>> obtenerCafes() async{
-    try{
-      final response = await _dio.get(_coffeEndpoint);
-      if(response.statusCode == 200){
-        final List<dynamic> data = response.data as List<dynamic>;
+  Future<List<CafeModel>> obtenerCafes() async {
+    try {
+      final reponse = await _dio.get(_coffeEndpoint);
+      if (reponse.statusCode == 200) {
+        final List<dynamic> data = reponse.data as List<dynamic>;
         return data.map((item) => CafeModel.fromJson(item)).toList();
-      }else{
-        throw Exception('El servidor respondio con codigo ${response.statusCode}');
+      } else {
+        throw Exception(
+          'El servidor respondio con codifo ${reponse.statusCode}',
+        );
       }
-    } on DioException catch(dioError){
+    } on DioException catch (dioError) {
       throw Exception(dioError);
     } catch (e) {
-      throw Exception('Ocurrio un error inesperado a procesar los datos');
+      throw Exception('Ocurrio un erros inesperado al procesar los datos');
     }
   }
 }

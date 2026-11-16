@@ -115,8 +115,8 @@ class PantallaCafes extends StatefulWidget {
 }
 
 class _PantallaCafesState extends State<PantallaCafes> {
-  bool _soloWifi = false;
-  int _visitas = 0;
+  final bool _soloWifi = false;
+  final int _visitas = 0;
 
   @override
   Widget build(BuildContext context) {
