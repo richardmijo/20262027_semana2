@@ -13,44 +13,40 @@ class CafeModel {
     required this.nombre,
     required this.descripcion,
     required this.ingredientes,
-    required this.imagenUrl,
+    this.imagenUrl,
     this.precio = 2.25,
     this.calificacion = 4.5,
-    required this.tieneWifi,
+    this.tieneWifi = true,
   });
 
-  // Serializar
   factory CafeModel.fromJson(Map<String, dynamic> json) {
     final rawId = json['id'];
-
     final int parsedId = rawId is int
         ? rawId
         : (int.tryParse(rawId?.toString() ?? '') ?? 0);
-
     final rawIngredients = json['ingredients'] ?? json['ingredientes'];
-
     final List<String> parsedIngredients = rawIngredients is List
         ? rawIngredients.map((item) => item.toString()).toList()
         : [];
-
-return CafeModel(
-  id: parsedId,
-  nombre: (json['title'] ?? json['nombre'] ?? 'Cafe Especial') as String,
-  descripcion:
-      (json['description'] ??
-      json['descripcion'] ??
-      'Delicioso cafe tostado.'),
-  ingredientes: parsedIngredients,
-  imagenUrl: json['image'] as String?,
-  precio:
-      (json['precio'] as num?)?.toDouble() ??
-      (1.75 + (parsedId % 4) * 0.50),
-  calificacion:
-      (json['calificacion'] as num?)?.toDouble() ??
-      (4.0 + (parsedId % 10) * 0.1),
-  tieneWifi: json['wifi'] as bool? ?? (parsedId % 2 == 0),
-);
+    return CafeModel(
+      id: parsedId,
+      nombre: (json['title'] ?? json['nombre'] ?? 'Cafe Especial') as String,
+      descripcion:
+          (json['description'] ??
+          json['descripcion'] ??
+          'Delicioso cafe tostado.'),
+      imagenUrl: (json['image'] ?? json['imagenUrl']) as String?,
+      ingredientes: parsedIngredients,
+      precio:
+          (json['precio'] as num?)?.toDouble() ??
+          (1.75 + (parsedId % 4) * 0.50),
+      calificacion:
+          (json['calificacion'] as num?)?.toDouble() ??
+          (4.0 + (parsedId % 10) * 0.1),
+      tieneWifi: json['wifi'] as bool? ?? (parsedId % 2 == 0),
+    );
   }
-  String get resumenIngredientes =>
+
+  String get resumenIngredients =>
       ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(', ');
 }

@@ -1,8 +1,7 @@
 import 'dart:developer';
-import 'package:dio/dio.dart';
 
-// IMPORTANTE: Ajusta esta ruta según dónde tengas CafeModel.
-import '../models/cafe_model.dart';
+import 'package:dio/dio.dart';
+import 'package:semana2/models/cafe_model.dart';
 
 class CafeService {
   late final Dio _dio;
@@ -29,13 +28,13 @@ class CafeService {
           log('Dio request');
           return handler.next(options);
         },
-        onResponse: (response, handler) {
+        onResponse: (options, handler) {
           log('Dio response');
-          return handler.next(response);
+          return handler.next(options);
         },
-        onError: (error, handler) {
+        onError: (options, handler) {
           log('Dio error');
-          return handler.next(error);
+          return handler.next(options);
         },
       ),
     );
@@ -43,28 +42,19 @@ class CafeService {
 
   Future<List<CafeModel>> obtenerCafes() async {
     try {
-      final response = await _dio.get(_coffeEndpoint);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data as List<dynamic>;
-
-        return data
-            .map(
-              (item) =>
-                  CafeModel.fromJson(item as Map<String, dynamic>),
-            )
-            .toList();
+      final reponse = await _dio.get(_coffeEndpoint);
+      if (reponse.statusCode == 200) {
+        final List<dynamic> data = reponse.data as List<dynamic>;
+        return data.map((item) => CafeModel.fromJson(item)).toList();
       } else {
         throw Exception(
-          'El servidor respondio con codigo ${response.statusCode}',
+          'El servidor respondio con codifo ${reponse.statusCode}',
         );
       }
     } on DioException catch (dioError) {
       throw Exception(dioError);
     } catch (e) {
-      throw Exception(
-        'Ocurrio un error inesperado al procesar los datos',
-      );
+      throw Exception('Ocurrio un erros inesperado al procesar los datos');
     }
   }
 }
