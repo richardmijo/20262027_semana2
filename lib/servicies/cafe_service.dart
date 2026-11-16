@@ -49,9 +49,31 @@ class CafeService {
       }  
 
     } on DioException catch (dioError) {
-      throw Exception(dioError);
+      throw Exception(interpretarDioError(dioError));
     } catch (error) {
-      throw Exception('Ocurrio un eririr ');;
+      throw Exception('Ocurrio un error inesperado al procesar datos ');
+    }
+  }
+  String interpretarDioError(DioException error){
+    switch (error.type){
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'El servidor tardo demasiado';
+
+        case DioExceptionType.connectionError:
+        return 'No hay conexion a internet';
+
+        case DioExceptionType.badResponse:
+        return 'Error en el servidor';
+
+      case DioExceptionType.cancel:
+        return 'La peticion fue cancelada';
+
+      default:
+        return 'Error de la red';
+
+
     }
   }
 }
