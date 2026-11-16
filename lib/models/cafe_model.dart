@@ -6,7 +6,7 @@ class CafeModel {
   final String? imagenUrl;
   final double precio;
   final double calificacion;
-  final bool tieneWIFI;
+  final bool tieneWifi;
 
   const CafeModel({
     required this.id,
@@ -16,21 +16,18 @@ class CafeModel {
     this.imagenUrl,
     this.precio = 2.25,
     this.calificacion = 4.5,
-    this.tieneWIFI = false,
+    this.tieneWifi = true,
   });
 
-  // Serializar
   factory CafeModel.fromJson(Map<String, dynamic> json) {
     final rawId = json['id'];
     final parsedId = rawId is int
         ? rawId
         : int.tryParse(rawId?.toString() ?? '') ?? 0;
-
     final rawIngredientes = json['ingredientes'] ?? json['ingredients'];
     final parsedIngredientes = rawIngredientes is List
         ? rawIngredientes.map((item) => item.toString()).toList()
         : <String>[];
-
     final rawPrecio = json['precio'] ?? json['price'];
     final rawCalificacion = json['calificacion'] ?? json['rating'];
 
@@ -42,18 +39,20 @@ class CafeModel {
               'Delicioso café tostado')
           .toString(),
       ingredientes: parsedIngredientes,
-      imagenUrl: (json['imagenUrl'] ?? json['imageUrl'])?.toString(),
+      imagenUrl: (json['imagenUrl'] ?? json['imageUrl'] ?? json['image'])
+          ?.toString(),
       precio: rawPrecio is num
           ? rawPrecio.toDouble()
           : 1.75 + (parsedId % 4) * 0.5,
       calificacion: rawCalificacion is num
           ? rawCalificacion.toDouble()
           : 4.0 + (parsedId % 10) * 0.1,
-      tieneWIFI: json['wifi'] as bool? ?? (parsedId % 2 == 0)
-
+      tieneWifi: json['wifi'] as bool? ?? (parsedId % 2 == 0),
     );
   }
 
   String get resumenIngredientes =>
       ingredientes.isEmpty ? 'Café de altura' : ingredientes.join(', ');
+
+  String get resumenIngredients => resumenIngredientes;
 }
