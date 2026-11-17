@@ -18,7 +18,7 @@ class CafeModel {
     this.calificacion = 4.5,
     this.tieneWifi = true,
   });
-  //serealizar
+
   factory CafeModel.fromJson(Map<String, dynamic> json) {
     final rawId = json['id'];
     final int parsedId = rawId is int
@@ -43,10 +43,10 @@ class CafeModel {
       calificacion:
           (json['calificacion'] as num?)?.toDouble() ??
           (4.0 + (parsedId % 10) * 0.1),
-      tieneWifi: (json['wifi'] ?? json['Wifi']) as bool? ?? (parsedId % 2 == 0),
+      tieneWifi: json['wifi'] as bool? ?? (parsedId % 2 == 0),
     );
   }
 
-  String get resumenIngredientes =>
+  String get resumenIngredients =>
       ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(', ');
 }
