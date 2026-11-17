@@ -13,8 +13,8 @@ class CafeService {
     _dio = Dio(
       BaseOptions(
         baseUrl: _baseUrl,
-        connectTimeout: Duration(seconds: 8),
-        receiveTimeout: Duration(seconds: 8),
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -28,13 +28,13 @@ class CafeService {
           log('Dio request');
           return handler.next(options);
         },
-        onResponse: (options, handler) {
+        onResponse: (response, handler) {
           log('Dio response');
-          return handler.next(options);
+          return handler.next(response);
         },
-        onError: (options, handler) {
+        onError: (error, handler) {
           log('Dio error');
-          return handler.next(options);
+          return handler.next(error);
         },
       ),
     );
@@ -42,19 +42,36 @@ class CafeService {
 
   Future<List<CafeModel>> obtenerCafes() async {
     try {
-      final reponse = await _dio.get(_coffeEndpoint);
-      if (reponse.statusCode == 200) {
-        final List<dynamic> data = reponse.data as List<dynamic>;
+      final response = await _dio.get(_coffeEndpoint);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data as List<dynamic>;
         return data.map((item) => CafeModel.fromJson(item)).toList();
       } else {
         throw Exception(
-          'El servidor respondio con codifo ${reponse.statusCode}',
+          'El servidor respondio con codigo ${response.statusCode}',
         );
       }
     } on DioException catch (dioError) {
-      throw Exception(dioError);
+      throw Exception(_interpretarDioError(dioError));
     } catch (e) {
-      throw Exception('Ocurrio un erros inesperado al procesar los datos');
+      throw Exception('Ocurrio un error inesperado al procesar los datos');
+    }
+  } // <- aquí se cierra obtenerCafes()
+
+  String _interpretarDioError(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'El servidor tardo demasiado';
+      case DioExceptionType.connectionError:
+        return 'No hay conexion a internet';
+      case DioExceptionType.badResponse:
+        return 'Error en el servidor';
+      case DioExceptionType.cancel:
+        return 'La peticion fue cancelada';
+      default:
+        return 'Error en la red';
     }
   }
 }
