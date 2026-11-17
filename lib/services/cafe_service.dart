@@ -48,13 +48,36 @@ class CafeService {
         return data.map((item) => CafeModel.fromJson(item)).toList();
       } else {
         throw Exception(
-          'El servidor respondio con codifo ${reponse.statusCode}',
+          'El servidor respondio con codigo ${reponse.statusCode}',
         );
       }
     } on DioException catch (dioError) {
-      throw Exception(dioError);
+      throw Exception(_interpretarDioError(dioError));
     } catch (e) {
-      throw Exception('Ocurrio un erros inesperado al procesar los datos');
+      throw Exception('Ocurrio un error inesperado al procesar los datos');
+    }
+  }
+
+  String _interpretarDioError(DioException error) { //se usa _ guion bajo para métodos privados
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+
+      case DioExceptionType.sendTimeout:
+
+      case DioExceptionType.receiveTimeout:
+        return 'Tiempo de recepcion agotado';
+
+      case DioExceptionType.connectionError:
+        return 'No hay conexión a internet';
+
+      case DioExceptionType.badResponse:
+        return 'Error en el servidor';
+
+      case DioExceptionType.cancel:
+        return 'La petición fue cancelada';
+
+      default:
+        return 'Error en la red';
     }
   }
 }
