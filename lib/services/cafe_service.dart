@@ -52,9 +52,33 @@ class CafeService {
         );
       }
     } on DioException catch (dioError) {
-      throw Exception(dioError);
+      throw Exception(_interpretarDioError(dioError));
     } catch (e) {
       throw Exception('Ocurrio un erros inesperado al procesar los datos');
+    }
+  }
+
+  String _interpretarDioError(DioException error){
+    switch(error.type){
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'El servidor tardo demaciado';
+
+
+      case DioExceptionType.connectionError:
+        return 'No hay conexión con el servidor';
+        
+      case DioExceptionType.badResponse:
+        return 'Error en el servidor';
+
+
+      case DioExceptionType.cancel:
+        return 'La peticion fue cancelada';
+
+
+      default:
+        return 'Error en la red';
     }
   }
 }
