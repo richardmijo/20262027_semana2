@@ -19,13 +19,8 @@ class CafeService {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-<<<<<<< HEAD
       ), //BaseOptions
     ); //Dio
-=======
-      ),
-    );
->>>>>>> main
 
     _dio.interceptors.add(
       InterceptorsWrapper(
@@ -59,11 +54,28 @@ class CafeService {
     } on DioException catch (dioError) {
       throw Exception(dioError);
     } catch (e) {
-<<<<<<< HEAD
       throw Exception('Ocurrio un error inesperado al procesar los datos');
-=======
-      throw Exception('Ocurrio un erros inesperado al procesar los datos');
->>>>>>> main
+    }
+  }
+
+  String interpretarDioError(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'El servidor tardo demasiado';
+
+      case DioExceptionType.connectionError:
+        return 'No hay conexion a internet';
+
+      case DioException.badResponse:
+        return 'Error en el servidor';
+
+      case DioExceptionType.cancel:
+        return 'La peticion fue cancelada';
+
+      default:
+        return 'Error en la red';
     }
   }
 }
