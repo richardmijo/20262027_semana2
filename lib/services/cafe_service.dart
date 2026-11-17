@@ -48,7 +48,7 @@ class CafeService {
         return data.map((item) => CafeModel.fromJson(item)).toList();
       } else {
         throw Exception(
-          'El servidor respondio con codifo ${reponse.statusCode}',
+          'El servidor respondio con codigo ${reponse.statusCode}',
         );
       }
     } on DioException catch (dioError) {
