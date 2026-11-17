@@ -52,9 +52,28 @@ class CafeService {
         );
       }
     } on DioException catch (dioError) {
-      throw Exception(dioError);
+      throw Exception(_interpretarDioError(dioError));
     } catch (e) {
       throw Exception('Ocurrio un erros inesperado al procesar los datos');
+    }
+  }
+
+  String _interpretarDioError(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'El servidor tardo demasiado ';
+      case DioExceptionType.connectionError:
+        return 'no hay conexion a internet';
+
+      case DioExceptionType.badResponse:
+        return 'no hay conexion a internet';
+
+      case DioExceptionType.cancel:
+        return 'La solicitud fue cancelada. Por favor, intenta nuevamente.';
+      default:
+        return 'error de la red ';
     }
   }
 }

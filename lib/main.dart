@@ -111,17 +111,16 @@ class PantallaCafes extends StatefulWidget {
   const PantallaCafes({super.key});
 
   @override
-  _PantallaCafesState createState() => _PantallaCafesState();
+  State<PantallaCafes> createState() => PantallaCafesState();
 }
 
-class _PantallaCafesState extends State<PantallaCafes> {
+class PantallaCafesState extends State<PantallaCafes> {
+  // ignore: unused_field
   final bool _soloWifi = false;
   final int _visitas = 0;
 
   @override
   Widget build(BuildContext context) {
-    final visibles = cafes.where((c) => !_soloWifi || c.wifi).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Cafés de Loja'),
