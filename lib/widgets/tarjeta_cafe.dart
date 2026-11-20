@@ -7,8 +7,14 @@ import '../utils/cafe_helpers.dart';
 class TarjetaCafe extends StatelessWidget {
   final CafeModel cafe;
   final VoidCallback alVisitar;
+  final bool favorito;
 
-  const TarjetaCafe({super.key, required this.cafe, required this.alVisitar});
+  const TarjetaCafe({
+    super.key,
+    required this.cafe,
+    required this.alVisitar,
+    this.favorito = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +75,15 @@ class TarjetaCafe extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
+            if (favorito)
+              const Icon(
+                Icons.star,
+                size: 16,
+                color: Colors.amber,
+                semanticLabel: 'Favorito',
+              )
+            else
+              const Icon(Icons.touch_app, size: 16, color: Colors.grey),
           ],
         ),
         onTap: alVisitar,

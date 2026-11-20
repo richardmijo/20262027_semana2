@@ -6,16 +6,21 @@ import 'package:semana2/widgets/estados_vista.dart';
 import 'package:semana2/widgets/tarjeta_cafe.dart';
 
 import '../utils/cafe_helpers.dart';
+import 'cafe_detalle_screen.dart';
 
 class CafeScreen extends StatefulWidget {
-  const CafeScreen({super.key});
+  const CafeScreen({super.key, this.cafeService});
+
+  final CafeService? cafeService;
 
   @override
   State<CafeScreen> createState() => _CafeScreenState();
 }
 
 class _CafeScreenState extends State<CafeScreen> {
-  final CafeService _cafeService = CafeService();
+  late final CafeService _cafeService = widget.cafeService ?? CafeService();
+  final Set<int> _favoritos = {};
+  bool _abriendoDetalle = false;
 
   bool _cargando = true;
   String? _error;
@@ -54,6 +59,48 @@ class _CafeScreenState extends State<CafeScreen> {
     }
   }
 
+  Future<void> _abrirDetalle(BuildContext context, CafeModel cafe) async {
+    if (_abriendoDetalle) return;
+
+    final favoritoInicial = _favoritos.contains(cafe.id);
+    bool? cambioFavorito;
+    _abriendoDetalle = true;
+    try {
+      final favorito = await Navigator.of(context).push(
+        _RutaDetalleCafe(
+          resultadoAlVolver: () => cambioFavorito,
+          builder: (_) => CafeDetalleScreen(
+            cafe: cafe,
+            favoritoInicial: favoritoInicial,
+            alCambiarFavorito: (valor) {
+              cambioFavorito = valor == favoritoInicial ? null : valor;
+            },
+          ),
+        ),
+      );
+      if (!context.mounted) return;
+
+      setState(() {
+        _visitas++;
+        if (favorito == true) _favoritos.add(cafe.id);
+        if (favorito == false) _favoritos.remove(cafe.id);
+      });
+      if (favorito == null) return;
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              favorito ? 'Añadido a favoritos' : 'Quitado de favoritos',
+            ),
+          ),
+        );
+    } finally {
+      _abriendoDetalle = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
@@ -61,7 +108,7 @@ class _CafeScreenState extends State<CafeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cafes de Loja'),
+        title: Text('Cafés de Loja'),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -123,14 +170,21 @@ class _CafeScreenState extends State<CafeScreen> {
           final cafe = visibles[index];
           return TarjetaCafe(
             cafe: cafe,
-            alVisitar: () {
-              setState(() {
-                _visitas++;
-              });
-            },
+            favorito: _favoritos.contains(cafe.id),
+            alVisitar: () => _abrirDetalle(this.context, cafe),
           );
         },
       ),
     );
   }
+}
+
+class _RutaDetalleCafe extends MaterialPageRoute<bool> {
+  _RutaDetalleCafe({required super.builder, required this.resultadoAlVolver});
+
+  final bool? Function() resultadoAlVolver;
+
+  // La flecha y el retroceso del sistema cierran la ruta sin resultado explícito.
+  @override
+  bool? get currentResult => resultadoAlVolver();
 }
