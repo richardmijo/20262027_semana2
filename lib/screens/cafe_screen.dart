@@ -20,6 +20,7 @@ class _CafeScreenState extends State<CafeScreen> {
   String? _error;
   List<CafeModel> _cafes = [];
   bool _soloWifi = false;
+  bool _soloMejorCalificadas = false;
   int _visitas = 0;
 
   @override
@@ -52,8 +53,12 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles =
-        _cafes.where((cafe) => !_soloWifi || cafe.tieneWifi).toList();
+    final visibles = _cafes.where((cafe) {
+      final cumpleWifi = !_soloWifi || cafe.tieneWifi;
+      final cumpleCalificacion =
+          !_soloMejorCalificadas || cafe.calificacion >= 4.5;
+      return cumpleWifi && cumpleCalificacion;
+    }).toList();
     final (promedio, conWifi) = resumen(visibles);
 
     return Scaffold(
@@ -79,8 +84,12 @@ class _CafeScreenState extends State<CafeScreen> {
               promedio: promedio,
               conWifi: conWifi,
               soloWifi: _soloWifi,
-              onToggleWifi: (value) => setState(() {
-                _soloWifi = value;
+              soloMejorCalificadas: _soloMejorCalificadas,
+              onToogleWifi: (val) => setState(() {
+                _soloWifi = val;
+              }),
+              onToogleMejorCalificadas: (val) => setState(() {
+                _soloMejorCalificadas = val;
               }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
@@ -107,6 +116,7 @@ class _CafeScreenState extends State<CafeScreen> {
       return EstadoVacio(
         onAccion: () => setState(() {
           _soloWifi = false;
+          _soloMejorCalificadas = false;
         }),
       );
     }

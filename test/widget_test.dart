@@ -8,23 +8,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:semana2/main.dart';
+import 'package:semana2/widgets/cabecera_resumen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Muestra los dos filtros de la cabecera', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CabeceraResumen(
+            total: 3,
+            promedio: 4.6,
+            conWifi: 2,
+            soloWifi: false,
+            soloMejorCalificadas: false,
+            onToogleWifi: (_) {},
+            onToogleMejorCalificadas: (_) {},
+          ),
+        ),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Filtrar solo con Wi-Fi'), findsOneWidget);
+    expect(find.text('Mejor calificadas'), findsOneWidget);
+    expect(find.byType(Switch), findsNWidgets(2));
   });
 }

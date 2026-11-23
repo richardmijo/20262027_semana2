@@ -78,7 +78,7 @@ class EstadoVacio extends StatelessWidget {
     super.key,
     this.mensaje = 'No hay cafeterías que coincidan con el filtro.',
     required this.onAccion,
-    this.etiquetaAccion = 'Quitar filtro de Wi-Fi',
+    this.etiquetaAccion = 'Quitar todos los filtros',
   });
 
   @override

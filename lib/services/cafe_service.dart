@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:semana2/models/cafe_model.dart';
@@ -6,8 +7,9 @@ import 'package:semana2/models/cafe_model.dart';
 class CafeService {
   late final Dio _dio;
 
-  static const String _baseUrl = 'https://api.sampleapis.com';
-  static const String _coffeEndpoint = '/coffee/hot';
+  static const String _baseUrl = 'https://raw.githubusercontent.com';
+  static const String _coffeEndpoint =
+      '/richardmijo/20262027_semana2/main/cafes.json';
 
   CafeService() {
     _dio = Dio(
@@ -15,10 +17,6 @@ class CafeService {
         baseUrl: _baseUrl,
         connectTimeout: Duration(seconds: 8),
         receiveTimeout: Duration(seconds: 8),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
       ),
     );
 
@@ -42,13 +40,16 @@ class CafeService {
 
   Future<List<CafeModel>> obtenerCafes() async {
     try {
-      final reponse = await _dio.get(_coffeEndpoint);
-      if (reponse.statusCode == 200) {
-        final List<dynamic> data = reponse.data as List<dynamic>;
+      final response = await _dio.get(_coffeEndpoint);
+      if (response.statusCode == 200) {
+        final dynamic raw = response.data;
+        final List<dynamic> data = raw is String
+            ? jsonDecode(raw) as List<dynamic>
+            : raw as List<dynamic>;
         return data.map((item) => CafeModel.fromJson(item)).toList();
       } else {
         throw Exception(
-          'El servidor respondió con código ${reponse.statusCode}',
+          'El servidor respondió con código ${response.statusCode}',
         );
       }
     } on DioException catch (dioError) {
@@ -68,7 +69,8 @@ class CafeService {
       case DioExceptionType.connectionError:
         return 'No hay conexión de internet'; // <-- Faltaba el punto y coma
 
-      case DioExceptionType.badResponse: // <-- Corregido "dabResponse" por "badResponse"
+      case DioExceptionType
+          .badResponse: // <-- Corregido "dabResponse" por "badResponse"
         return "Error en el servidor";
 
       case DioExceptionType.cancel:

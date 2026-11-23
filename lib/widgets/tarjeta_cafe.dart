@@ -24,7 +24,7 @@ class TarjetaCafe extends StatelessWidget {
                   width: 50,
                   height: 50,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) =>
+                  errorBuilder: (_, _, _) =>
                       const CircleAvatar(child: Icon(Icons.coffee)),
                 ),
               )
@@ -40,6 +40,18 @@ class TarjetaCafe extends StatelessWidget {
               cafe.descripcion,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              cafe.direccion,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.black87),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Horario: ${cafe.horario}',
+              style: const TextStyle(color: Colors.black54),
             ),
             const SizedBox(height: 4),
             Row(
