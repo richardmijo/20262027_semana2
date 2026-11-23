@@ -1,59 +1,64 @@
-class CafeModel{
+class CafeModel {
+  final int id;
+  final String nombre;
+  final String descripcion;
+  final List<String> ingredientes;
+  final String? imagenUrl;
+  final double precio;
+  final double calificacion;
+  final bool tieneWifi;
+  final String direccion;
+  final String horario;
 
-    final int id;
-    final String nombre;
-    final String descripcion;
-    final List<String> ingredientes;
-    final String? imagenUrl;
-    final double precio;
-    final double calificacion;
-    final bool tieneWifi;
+  CafeModel({
+    required this.id,
+    required this.nombre,
+    required this.descripcion,
+    required this.ingredientes,
+    this.imagenUrl,
+    this.precio = 2.25,
+    this.calificacion = 4.5,
+    this.tieneWifi = true,
+    this.direccion = 'Calle Bolívar y 10 de Agosto (Centro)',
+    this.horario = '07:30 - 21:00',
+  });
 
-    CafeModel({
-        required this.id,
-        required this.nombre,
-        required this.descripcion,
-        required this.ingredientes,
-        this.imagenUrl,
-        this.precio = 2.25,
-        this.calificacion = 4.5,
-        this.tieneWifi = true,
-        
+  factory CafeModel.fromJson(Map<String, dynamic> json) {
+    final rawId = json['id'];
+    final int parsedId = rawId is int
+        ? rawId
+        : (int.tryParse(rawId?.toString() ?? '') ?? 0);
+    final rawIngredients = json['ingredients'] ?? json['ingredientes'];
+    final List<String> parsedIngredients = rawIngredients is List
+        ? rawIngredients.map((item) => item.toString()).toList()
+        : [];
+    return CafeModel(
+      id: parsedId,
+      nombre: (json['title'] ?? json['nombre'] ?? 'Cafe Especial') as String,
+      descripcion:
+          (json['description'] ??
+          json['descripcion'] ??
+          'Delicioso cafe tostado.'),
+      imagenUrl: (json['image'] ?? json['imagenUrl']) as String?,
+      ingredientes: parsedIngredients,
+      precio:
+          (json['precio'] as num?)?.toDouble() ??
+          (1.75 + (parsedId % 4) * 0.50),
+      calificacion:
+          (json['calificacion'] as num?)?.toDouble() ??
+          (4.0 + (parsedId % 10) * 0.1),
+      tieneWifi: json['wifi'] as bool? ?? (parsedId % 2 == 0),
+      direccion: (json['direccion'] ??
+              json['address'] ??
+              'Calle Bolívar ${(parsedId * 103) % 900 + 100}')
+          as String,
+      horario: (json['horario'] ??
+              json['schedule'] ??
+              '0${7 + (parsedId % 3)}:00 - 2${0 + (parsedId % 3)}:00')
+          as String,
+    );
+  }
 
-    });
-
-    //serializar
-    factory CafeModel.fromJson(Map<String, dynamic> json){
-        final rawId = json['id'];
-        final int parseId = rawId is int 
-            ? rawId : (int.tryParse(rawId?.toString() ?? '') ?? 0);
-        
-        final rawIngredients = json['ingredients'] ?? json['ingredientes'] ;
-        final List<String> parsedIngredients = rawIngredients is List
-            ? rawIngredients.map((item) => item.toString()).toList()
-            : [];
-        return CafeModel(
-            id: parseId,
-            nombre: (json['title']?? json ['nombre'] ?? 'Cafe Especial') as String,
-            descripcion: (json['descripcion'] ??json['description'] ?? 'Delicioso cafe tostado'),
-            ingredientes: parsedIngredients,
-            precio: (json['precio'] as num?)?.toDouble() ??
-                (1.75 + (parseId % 4) * 0.50),
-            calificacion: (json['calificacion'] as num?)?.toDouble()??
-                (4.0 + (parseId % 10) * 0.1),
-            tieneWifi: json['wifi'] as bool ? ?? (parseId % 2 ==0),
-
-
-        );
-           
-
-
-    }
-
-    String get resumenIngredients => ingredientes.isEmpty ? 'Cafe de altura'
-        : ingredientes.join(','); 
-    
-
-
-
-} 
+  String get resumenIngredients =>
+      ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(', ');
+}

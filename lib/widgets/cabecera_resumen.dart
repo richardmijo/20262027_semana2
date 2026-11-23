@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class CabeceraResumen extends StatelessWidget {
@@ -25,6 +24,7 @@ class CabeceraResumen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
+        color: colores.primaryContainer,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -37,10 +37,11 @@ class CabeceraResumen extends StatelessWidget {
                 size: 36,
                 color: colores.onPrimaryContainer,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
+
               Expanded(
                 child: Text(
-                  '$total Cafeterías Disponibles',
+                  '$total Cafeterias disponibles',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: colores.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
@@ -49,20 +50,18 @@ class CabeceraResumen extends StatelessWidget {
               ),
             ],
           ),
-
-        SizedBox(height: 16,),
-        Text('Calificación promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
-        ),
-        
-        Divider(height: 20,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text('Filtrar solo con Wi-Fi'),
-            Switch(value: soloWifi, onChanged: onToogleWifi),
-          ],
-          
-        ),
-
+          SizedBox(height: 16),
+          Text(
+            'Calificacion promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
+          ),
+          Divider(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Filtrar solo con Wi-Fi'),
+              Switch(value: soloWifi, onChanged: onToogleWifi),
+            ],
+          ),
         ],
       ),
     );

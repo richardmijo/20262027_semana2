@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:semana2/models/cafe_model.dart';
 import 'package:semana2/services/cafe_service.dart';
@@ -22,7 +21,7 @@ class _CafeScreenState extends State<CafeScreen> {
   String? _error;
   List<CafeModel> _cafes = [];
 
-  // Filtros
+  // filtros
   bool _soloWifi = false;
   int _visitas = 0;
 
@@ -40,7 +39,6 @@ class _CafeScreenState extends State<CafeScreen> {
 
     try {
       final resultado = await _cafeService.obtenerCafes();
-
       if (!mounted) return;
 
       setState(() {
@@ -49,9 +47,8 @@ class _CafeScreenState extends State<CafeScreen> {
       });
     } catch (e) {
       if (!mounted) return;
-
       setState(() {
-        _error = e.toString();
+        _error = e.toString().replaceFirst('Exception: ', '');
         _cargando = false;
       });
     }
@@ -59,91 +56,71 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes
-        .where((c) => !_soloWifi || c.tieneWifi)
-        .toList();
-
+    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
     final (promedio, conWifi) = resumen(_cafes);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cafes de Loja'),
+        title: Text('Cafes de Loja'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16),
+            padding: EdgeInsets.only(right: 16),
             child: Center(
               child: Badge(
                 label: Text('$_visitas'),
-                child: const Icon(Icons.place_outlined),
+                child: Icon(Icons.place_outlined),
               ),
             ),
           ),
         ],
       ),
-
       body: Column(
         children: [
-          if (!_cargando && _error == null) ...[
+          if (!_cargando && _error == null)
             CabeceraResumen(
               total: _cafes.length,
               promedio: promedio,
               conWifi: conWifi,
               soloWifi: _soloWifi,
-              onToogleWifi: (val) {
-                setState(() {
-                  _soloWifi = val;
-                });
-              },
+              onToogleWifi: (val) => setState(() {
+                _soloWifi = val;
+              }),
             ),
-          ],
-
-          Expanded(
-            child: _construirCuerpo(visibles),
-          ),
+          Expanded(child: _construirCuerpo(visibles)),
         ],
       ),
-
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _cargarCafes,
-        label: const Text('Recargar API'),
-        icon: const Icon(Icons.refresh),
+        label: Text('Recargar API'),
+        icon: Icon(Icons.refresh),
       ),
     );
   }
 
   Widget _construirCuerpo(List<CafeModel> visibles) {
-    // Estado 1: Cargando
+    // Etado 1: cargando
     if (_cargando) {
       return EstadoCargando();
     }
-
     // Estado 2: Error
     if (_error != null) {
-      return EstadoError(
-        mensaje: _error!,
-        onReintentar: _cargarCafes,
-      );
+      return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-
-    // Estado 3: Vacío
+    // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
-        onAccion: () {
-          setState(() {
-            _soloWifi = false;
-          });
-        },
+        onAccion: () => setState(() {
+          _soloWifi = false;
+        }),
       );
     }
-
-    // Estado 4: Mostrar datos
+    // Estado 4: los datos
     return RefreshIndicator(
       onRefresh: _cargarCafes,
       child: ListView.builder(
         itemCount: visibles.length,
         itemBuilder: (context, index) {
           final cafe = visibles[index];
-
           return TarjetaCafe(
             cafe: cafe,
             alVisitar: () {
