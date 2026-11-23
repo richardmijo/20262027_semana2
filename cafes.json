@@ -1,92 +1,162 @@
 [
   {
     "id": 1,
-    "title": "Café de la Puerta",
-    "description": "Café tradicional lojano de altura tostado artesanalmente.",
+    "title": "Emporio Lojano",
+    "description": "Casona patrimonial centenaria en el centro histórico. Café de especialidad de finca propia y empanadas tradicionales.",
     "ingredients": [
-      "Café arábica",
-      "Agua de vertiente"
+      "Café arábica de altura",
+      "Filtrado V60",
+      "Empanadas de verde"
     ],
     "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400",
-    "direccion": "Calle Bolívar y 10 de Agosto (Centro)",
-    "horario": "07:30 - 20:30",
-    "precio": 2.5,
-    "calificacion": 4.8,
+    "direccion": "Calle 10 de Agosto (entre Bolívar y Sucre)",
+    "horario": "07:30 - 21:00",
+    "precio": 2.75,
+    "calificacion": 4.9,
     "wifi": true
   },
   {
     "id": 2,
-    "title": "Rincón de San Sebastián",
-    "description": "Ambiente bohemio y colonial con el mejor café filtrado.",
+    "title": "Cronopios Coffee House",
+    "description": "Espacio cultural emblemático frente a la Plaza de las Flores. Microlotes de especialidad, literatura y arte.",
     "ingredients": [
-      "Café lavado",
-      "Notas cítricas"
+      "Microlote Sozoranga",
+      "Chemex",
+      "Torta de zanahoria"
     ],
     "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400",
-    "direccion": "Plaza de San Sebastián (Frente al museo)",
-    "horario": "08:00 - 21:00",
-    "precio": 2.75,
-    "calificacion": 4.6,
+    "direccion": "Bernardo Valdivieso y Azuay (Plaza 1ro de Mayo)",
+    "horario": "08:30 - 22:00",
+    "precio": 3.00,
+    "calificacion": 4.8,
     "wifi": true
   },
   {
     "id": 3,
-    "title": "Café del Valle",
-    "description": "Especialidad en café pasado y empanadas tradicionales.",
+    "title": "Indera Experience",
+    "description": "Concepto de la finca a la taza. Café de altura multi-galardonado con perfiles achocolatados y frutales.",
     "ingredients": [
-      "Café típico",
-      "Panela orgánica"
+      "Café Bourbon lavado",
+      "Espresso doble",
+      "Cold brew"
     ],
     "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
-    "direccion": "Av. Salvador Bustamante Celi (El Valle)",
-    "horario": "07:00 - 19:30",
-    "precio": 1.75,
-    "calificacion": 4.2,
-    "wifi": false
-  },
-  {
-    "id": 4,
-    "title": "Café del Zamora",
-    "description": "Vista panorámica al río con café cosechado en Vilcabamba.",
-    "ingredients": [
-      "Café Vilcabamba",
-      "Cacao fino de aroma"
-    ],
-    "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
-    "direccion": "Paseo de Zamora (Zamora Huayco)",
-    "horario": "09:00 - 22:00",
-    "precio": 3.0,
+    "direccion": "Calle 18 de Noviembre 201-32 y 10 de Agosto",
+    "horario": "08:00 - 20:30",
+    "precio": 2.50,
     "calificacion": 4.7,
     "wifi": true
   },
   {
-    "id": 5,
-    "title": "Espresso Loja Centro",
-    "description": "Para estudiar y trabajar con enchufes y conexión de alta velocidad.",
+    "id": 4,
+    "title": "Dagadá Café",
+    "description": "Cafetería de especialidad galardonada nacionalmente. Maestría en tueste, métodos artesanales y ambiente acogedor.",
     "ingredients": [
-      "Espresso doble",
-      "Leche vaporizada"
+      "Café Geisha lojano",
+      "Aeropress",
+      "Prensa francesa"
+    ],
+    "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
+    "direccion": "Calle 24 de Mayo y Azuay (Centro)",
+    "horario": "09:00 - 21:30",
+    "precio": 3.25,
+    "calificacion": 4.8,
+    "wifi": true
+  },
+  {
+    "id": 5,
+    "title": "Kaweh Coffee Shop",
+    "description": "Vitrina directa de Hacienda La Florida (Sozoranga). Pasión por resaltar la identidad cafetalera del sur de Ecuador.",
+    "ingredients": [
+      "Café Typica mejorado",
+      "Flat white",
+      "Capuccino"
     ],
     "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400",
-    "direccion": "Calle 10 de Agosto y Sucre",
-    "horario": "07:00 - 22:00",
+    "direccion": "Calle Bolívar y Alonso de Mercadillo",
+    "horario": "08:00 - 20:00",
     "precio": 2.25,
-    "calificacion": 4.1,
+    "calificacion": 4.3,
     "wifi": true
   },
   {
     "id": 6,
-    "title": "Cafetería La Catedral",
-    "description": "Clásica cafetería junto al parque central con aroma a canela.",
+    "title": "Montse Coffee & Bake Shop",
+    "description": "La combinación perfecta entre café de especialidad de origen y alta repostería fina artesanal.",
     "ingredients": [
-      "Café negro",
-      "Canela"
+      "Café Puyango",
+      "Latte art",
+      "Croissant de almendras"
     ],
     "image": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400",
-    "direccion": "Calle Bernardo Valdivieso (Parque Central)",
-    "horario": "08:00 - 20:00",
-    "precio": 1.5,
-    "calificacion": 3.9,
+    "direccion": "Av. Orillas del Zamora y Virgilio Abarca",
+    "horario": "07:30 - 20:30",
+    "precio": 2.80,
+    "calificacion": 4.4,
+    "wifi": true
+  },
+  {
+    "id": 7,
+    "title": "Bareque Café Arte",
+    "description": "Rincón colonial con esencia tradicional lojana en el histórico barrio San Sebastián. Tertulias y café pasado.",
+    "ingredients": [
+      "Café pasado en chuspa",
+      "Queso de hoja",
+      "Tamal lojano"
+    ],
+    "image": "https://images.unsplash.com/photo-1498804103079-a6351b050096?w=400",
+    "direccion": "Plaza de San Sebastián (Calle Bolívar)",
+    "horario": "15:00 - 22:30",
+    "precio": 1.75,
+    "calificacion": 4.6,
+    "wifi": false
+  },
+  {
+    "id": 8,
+    "title": "Café Puerta de la Ciudad",
+    "description": "Ubicado en el monumento más representativo de Loja. Una parada obligatoria con historia y café lojano.",
+    "ingredients": [
+      "Café lojano tradicional",
+      "Humitas lojanas",
+      "Chocolate ambateño"
+    ],
+    "image": "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=400",
+    "direccion": "Av. Gran Colombia (Puerta de la Ciudad)",
+    "horario": "08:00 - 19:00",
+    "precio": 2.00,
+    "calificacion": 4.5,
+    "wifi": false
+  },
+  {
+    "id": 9,
+    "title": "Hortencia Coffee Essence",
+    "description": "Espacio íntimo y moderno diseñado para los amantes de los aromas intensos y métodos de extracción lentos.",
+    "ingredients": [
+      "Café Honey Pacamara",
+      "Sifón japonés",
+      "Americano"
+    ],
+    "image": "https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400",
+    "direccion": "Calle Sucre y Rocafuerte (Centro)",
+    "horario": "09:00 - 20:00",
+    "precio": 2.50,
+    "calificacion": 4.2,
+    "wifi": false
+  },
+  {
+    "id": 10,
+    "title": "Café Tradición de Vilcabamba",
+    "description": "Famoso café cosechado en el Valle de la Longevidad. Granos orgánicos secados al sol y tostado medio.",
+    "ingredients": [
+      "Café orgánico Vilcabamba",
+      "Panela granulada",
+      "Bizcochuelos"
+    ],
+    "image": "https://images.unsplash.com/photo-1497636577773-f1231844b336?w=400",
+    "direccion": "Calle Lourdes (Calle Peatonal Lourdes y Bolívar)",
+    "horario": "08:00 - 21:00",
+    "precio": 1.50,
+    "calificacion": 4.1,
     "wifi": false
   }
 ]
