@@ -42,7 +42,18 @@ class TarjetaCafe extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-            Row(
+            // Dato nuevo del JSON: direccion y horario
+            Text(
+              '📍 ${cafe.direccion}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text('🕒 ${cafe.horario}'),
+            const SizedBox(height: 4),
+            // Wrap en vez de Row: si la letra es grande, baja a otra linea
+            Wrap(
+              spacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,12 +62,9 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
           ],
