@@ -18,10 +18,6 @@ class CafeService {
         baseUrl: _baseUrl,
         connectTimeout: const Duration(seconds: 8),
         receiveTimeout: const Duration(seconds: 8),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
       ),
     );
 
