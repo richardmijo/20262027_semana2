@@ -114,9 +114,10 @@ class _CafeScreenState extends State<CafeScreen> {
     if (_error != null) {
       return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-    final (promedio, conWifi) = resumen(_cafes);
+    final (promedio, conWifi) = resumen(visibles);
     final cabecera = CabeceraResumen(
       total: _cafes.length,
+      mostradas: visibles.length,
       promedio: promedio,
       conWifi: conWifi,
       soloWifi: _soloWifi,

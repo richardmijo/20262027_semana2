@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class CabeceraResumen extends StatelessWidget {
   final int total;
+  final int mostradas;
   final double promedio;
   final int conWifi;
   final bool soloWifi;
@@ -12,6 +13,7 @@ class CabeceraResumen extends StatelessWidget {
   const CabeceraResumen({
     super.key,
     required this.total,
+    required this.mostradas,
     required this.promedio,
     required this.conWifi,
     required this.soloWifi,
@@ -44,7 +46,9 @@ class CabeceraResumen extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '$total Cafeterias disponibles',
+                  mostradas == total
+                      ? '$total Cafeterias disponibles'
+                      : '$mostradas de $total Cafeterias',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: colores.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
