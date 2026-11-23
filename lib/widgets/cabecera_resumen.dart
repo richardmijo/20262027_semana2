@@ -21,8 +21,8 @@ class CabeceraResumen extends StatelessWidget {
     final colores = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(16.0),
-      margin: EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: colores.primaryContainer,
         borderRadius: BorderRadius.circular(16),
@@ -38,6 +38,7 @@ class CabeceraResumen extends StatelessWidget {
                 color: colores.onPrimaryContainer,
               ),
               SizedBox(width: 12),
+
               Expanded(
                 child: Text(
                   '$total Cafeterias disponibles',
