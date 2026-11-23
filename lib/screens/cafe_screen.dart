@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:semana2/models/cafe_model.dart';
 import 'package:semana2/services/cafe_service.dart';
@@ -26,6 +27,10 @@ class _CafeScreenState extends State<CafeScreen> {
   // filtros
   bool _soloWifi = false;
   bool _soloMejores = false;
+
+  // Solo para demostraciones en modo debug: fuerza un resultado vacío sin
+  // alterar los datos ni las reglas de los filtros.
+  bool _demoSinResultados = false;
   int _visitas = 0;
 
   @override
@@ -59,16 +64,27 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = filtrarCafes(
-      _cafes,
-      soloWifi: _soloWifi,
-      soloMejoresCalificadas: _soloMejores,
-    );
+    final visibles = _demoSinResultados
+        ? <CafeModel>[]
+        : filtrarCafes(
+            _cafes,
+            soloWifi: _soloWifi,
+            soloMejoresCalificadas: _soloMejores,
+          );
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Cafes de Loja'),
         actions: [
+          if (kDebugMode)
+            IconButton(
+              tooltip: 'Demo: simular sin resultados',
+              isSelected: _demoSinResultados,
+              icon: const Icon(Icons.science_outlined),
+              selectedIcon: const Icon(Icons.science),
+              onPressed: () =>
+                  setState(() => _demoSinResultados = !_demoSinResultados),
+            ),
           Padding(
             padding: EdgeInsets.only(right: 16),
             child: Center(
@@ -119,11 +135,19 @@ class _CafeScreenState extends State<CafeScreen> {
             child: Column(
               children: [
                 cabecera,
+                if (_demoSinResultados)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Chip(
+                      label: Text('Modo demo: resultado vacío simulado'),
+                    ),
+                  ),
                 const SizedBox(height: 24),
                 EstadoVacio(
                   onAccion: () => setState(() {
                     _soloWifi = false;
                     _soloMejores = false;
+                    _demoSinResultados = false;
                   }),
                 ),
               ],
