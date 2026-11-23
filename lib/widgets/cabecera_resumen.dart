@@ -5,7 +5,7 @@ class CabeceraResumen extends StatelessWidget {
   final double promedio;
   final int conWifi;
   final bool soloWifi;
-  final ValueChanged<bool> onToggleWifi;
+  final ValueChanged<bool> onToogleWifi;
 
   const CabeceraResumen({
     super.key,
@@ -13,7 +13,7 @@ class CabeceraResumen extends StatelessWidget {
     required this.promedio,
     required this.conWifi,
     required this.soloWifi,
-    required this.onToggleWifi,
+    required this.onToogleWifi,
   });
 
   @override
@@ -21,28 +21,31 @@ class CabeceraResumen extends StatelessWidget {
     final colores = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
+        color: colores.primaryContainer,
         borderRadius: BorderRadius.circular(16),
-        color: colores.surface,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.coffee_rounded, size: 36, color: colores.onPrimaryContainer),
-
+              Icon(
+                Icons.coffee_rounded,
+                size: 36,
+                color: colores.onPrimaryContainer,
+              ),
               SizedBox(width: 12),
 
               Expanded(
                 child: Text(
-                  '$total Cafeterias Disponibles',
+                  '$total Cafeterias disponibles',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: colores.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: colores.onPrimaryContainer,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -51,18 +54,14 @@ class CabeceraResumen extends StatelessWidget {
           Text(
             'Calificacion promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
           ),
-
           Divider(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Filtrar solo  con Wi-Fi'),
-              Switch(
-                value: soloWifi,
-                onChanged: onToggleWifi,
-              ),
+              Text('Filtrar solo con Wi-Fi'),
+              Switch(value: soloWifi, onChanged: onToogleWifi),
             ],
-          )
+          ),
         ],
       ),
     );
