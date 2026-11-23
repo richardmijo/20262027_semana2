@@ -42,7 +42,9 @@ class TarjetaCafe extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,14 +53,14 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
+            const SizedBox(height: 4),
+            _DatoConIcono(icono: Icons.place_outlined, texto: cafe.direccion),
+            _DatoConIcono(icono: Icons.schedule, texto: cafe.horario),
           ],
         ),
         trailing: Column(
@@ -73,6 +75,35 @@ class TarjetaCafe extends StatelessWidget {
           ],
         ),
         onTap: alVisitar,
+      ),
+    );
+  }
+}
+
+/// Línea con un icono y un texto que se ajusta al ancho disponible,
+/// para que no se desborde con la letra del sistema al máximo.
+class _DatoConIcono extends StatelessWidget {
+  final IconData icono;
+  final String texto;
+
+  const _DatoConIcono({required this.icono, required this.texto});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icono, size: 14, color: Colors.grey),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              texto,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+          ),
+        ],
       ),
     );
   }

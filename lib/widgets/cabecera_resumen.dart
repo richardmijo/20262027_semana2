@@ -6,6 +6,8 @@ class CabeceraResumen extends StatelessWidget {
   final int conWifi;
   final bool soloWifi;
   final ValueChanged<bool> onToogleWifi;
+  final bool soloMejores;
+  final ValueChanged<bool> onToogleMejores;
 
   const CabeceraResumen({
     super.key,
@@ -14,6 +16,8 @@ class CabeceraResumen extends StatelessWidget {
     required this.conWifi,
     required this.soloWifi,
     required this.onToogleWifi,
+    required this.soloMejores,
+    required this.onToogleMejores,
   });
 
   @override
@@ -58,8 +62,15 @@ class CabeceraResumen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Filtrar solo con Wi-Fi'),
+              Expanded(child: Text('Filtrar solo con Wi-Fi')),
               Switch(value: soloWifi, onChanged: onToogleWifi),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: Text('Mejor calificadas (4,5 o más)')),
+              Switch(value: soloMejores, onChanged: onToogleMejores),
             ],
           ),
         ],
