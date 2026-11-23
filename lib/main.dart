@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/cafe_screen.dart';
 
 /*void main() {
   runApp(const MyApp());
@@ -102,7 +103,7 @@ class CafesLojaApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.amber),
-      home: PantallaCafes(),
+      home: const CafeScreen(),
     );
   }
 }
@@ -111,17 +112,14 @@ class PantallaCafes extends StatefulWidget {
   const PantallaCafes({super.key});
 
   @override
-  _PantallaCafesState createState() => _PantallaCafesState();
+  State<PantallaCafes> createState() => _PantallaCafesState();
 }
 
 class _PantallaCafesState extends State<PantallaCafes> {
-  final bool _soloWifi = false;
   final int _visitas = 0;
 
   @override
   Widget build(BuildContext context) {
-    final visibles = cafes.where((c) => !_soloWifi || c.wifi).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Cafés de Loja'),

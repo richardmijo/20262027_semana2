@@ -42,3 +42,15 @@ A través de este ejercicio se busca:
    ```bash
    flutter run
    ```
+
+## Navegación y favoritos · Semana 4
+
+```mermaid
+flowchart LR
+    Lista["Lista de cafés"] -->|"push: CafeModel y favorito inicial"| Detalle["Detalle del café"]
+    Detalle -->|"retroceso: bool si cambió, null si quedó igual"| Lista
+```
+
+El detalle mantiene la selección local. Al cerrar por la flecha o el gesto, la
+ruta devuelve el cambio y la lista actualiza sus favoritos por ID. Los favoritos
+se conservan durante la sesión y no se escriben en la API.

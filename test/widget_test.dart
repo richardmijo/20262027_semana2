@@ -1,30 +1,56 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:semana2/models/cafe_model.dart';
+import 'package:semana2/screens/cafe_screen.dart';
+import 'package:semana2/services/cafe_service.dart';
 
-import 'package:semana2/main.dart';
+class _CafeServiceDePrueba extends CafeService {
+  @override
+  Future<List<CafeModel>> obtenerCafes() async => [
+    CafeModel(
+      id: 1,
+      nombre: 'Café de prueba',
+      descripcion: 'Café de Loja',
+      ingredientes: ['Leche'],
+    ),
+  ];
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Muestra los favoritos al volver por la flecha y el sistema', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: CafeScreen(cafeService: _CafeServiceDePrueba())),
+    );
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final cafe = find.text('Café de prueba');
+    final punto = tester.getCenter(cafe);
+    await tester.tapAt(punto);
+    await tester.tapAt(punto);
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final control = find.byType(SwitchListTile);
+    expect(control, findsOneWidget);
+    await tester.tap(control);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(control, findsNothing);
+    expect(find.byIcon(Icons.star), findsOneWidget);
+
+    await tester.tap(cafe);
+    await tester.pumpAndSettle();
+    expect(tester.widget<SwitchListTile>(control).value, isTrue);
+    await tester.tap(control);
+    await tester.pumpAndSettle();
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+
+    expect(control, findsNothing);
+    expect(find.byIcon(Icons.star), findsNothing);
+    expect(find.text('Quitado de favoritos'), findsOneWidget);
   });
 }
