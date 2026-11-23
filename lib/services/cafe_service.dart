@@ -41,7 +41,12 @@ class CafeService {
 
   Future<List<CafeModel>> obtenerCafes() async {
     try {
-      final response = await _dio.get(_coffeEndpoint);
+      // Parámetro 't' distinto en cada petición: evita que Safari responda
+      // desde su caché cuando no hay internet (así sí sale el estado de error)
+      final response = await _dio.get(
+        _coffeEndpoint,
+        queryParameters: {'t': DateTime.now().millisecondsSinceEpoch},
+      );
       if (response.statusCode == 200) {
         // Maneja tanto List directo como String serializado en texto plano
         final dynamic raw = response.data;

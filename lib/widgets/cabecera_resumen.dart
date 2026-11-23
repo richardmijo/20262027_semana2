@@ -6,6 +6,9 @@ class CabeceraResumen extends StatelessWidget {
   final int conWifi;
   final bool soloWifi;
   final ValueChanged<bool> onToogleWifi;
+  // Segundo filtro: "Mejor calificadas" (4,5 o más)
+  final bool soloMejores;
+  final ValueChanged<bool> onToggleMejores;
 
   const CabeceraResumen({
     super.key,
@@ -14,6 +17,8 @@ class CabeceraResumen extends StatelessWidget {
     required this.conWifi,
     required this.soloWifi,
     required this.onToogleWifi,
+    required this.soloMejores,
+    required this.onToggleMejores,
   });
 
   @override
@@ -55,15 +60,24 @@ class CabeceraResumen extends StatelessWidget {
             'Calificacion promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
           ),
           Divider(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Filtrar solo con Wi-Fi'),
-              Switch(value: soloWifi, onChanged: onToogleWifi),
-            ],
+          _filaFiltro('Filtrar solo con Wi-Fi', soloWifi, onToogleWifi),
+          _filaFiltro(
+            'Mejor calificadas (4,5 o más)',
+            soloMejores,
+            onToggleMejores,
           ),
         ],
       ),
+    );
+  }
+
+  // Expanded evita la franja amarilla cuando la letra del teléfono es grande
+  Widget _filaFiltro(String texto, bool valor, ValueChanged<bool> alCambiar) {
+    return Row(
+      children: [
+        Expanded(child: Text(texto)),
+        Switch(value: valor, onChanged: alCambiar),
+      ],
     );
   }
 }

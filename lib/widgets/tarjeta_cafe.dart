@@ -42,7 +42,14 @@ class TarjetaCafe extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-            Row(
+            // Dato nuevo desde el JSON: dirección y horario
+            _datoConIcono(Icons.location_on_outlined, cafe.direccion),
+            _datoConIcono(Icons.schedule, cafe.horario),
+            const SizedBox(height: 4),
+            // Wrap en lugar de Row: si no entra, baja a la siguiente línea
+            Wrap(
+              spacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,28 +58,33 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
           ],
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
-          ],
+        trailing: Text(
+          '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         onTap: alVisitar,
+      ),
+    );
+  }
+
+  // Ícono + texto que se ajusta en varias líneas (sin franja amarilla)
+  Widget _datoConIcono(IconData icono, String texto) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icono, size: 14, color: Colors.brown),
+          const SizedBox(width: 4),
+          Expanded(child: Text(texto, style: const TextStyle(fontSize: 13))),
+        ],
       ),
     );
   }
