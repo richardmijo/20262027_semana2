@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -6,8 +7,12 @@ import 'package:semana2/models/cafe_model.dart';
 class CafeService {
   late final Dio _dio;
 
-  static const String _baseUrl = 'https://api.sampleapis.com';
-  static const String _coffeEndpoint = '/coffee/hot';
+  // Endpoint 100% estable, sin caídas y con CORS habilitado (GitHub Raw)
+  static const String _baseUrl = 'https://raw.githubusercontent.com';
+  static const String _coffeEndpoint = String.fromEnvironment(
+    'CAFES_ENDPOINT',
+    defaultValue: '/richardmijo/20262027_semana2/main/cafes.json',
+  );
 
   CafeService() {
     _dio = Dio(
@@ -15,25 +20,23 @@ class CafeService {
         baseUrl: _baseUrl,
         connectTimeout: const Duration(seconds: 8),
         receiveTimeout: const Duration(seconds: 8),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
       ),
     );
 
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          log('Dio request');
+          log('🌐 [DIO Request] ${options.method} -> ${options.uri}');
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          log('Dio response');
+          log(
+            '✅ [DIO Response ${response.statusCode}] desde ${response.requestOptions.path}',
+          );
           return handler.next(response);
         },
         onError: (error, handler) {
-          log('Dio error');
+          log('❌ [DIO Error] ${error.type} | ${error.message}');
           return handler.next(error);
         },
       ),
@@ -44,32 +47,43 @@ class CafeService {
     try {
       final response = await _dio.get(_coffeEndpoint);
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data as List<dynamic>;
-        return data.map((item) => CafeModel.fromJson(item)).toList();
+        // Maneja tanto List directo como String serializado en texto plano
+        final dynamic raw = response.data;
+        final List<dynamic> data = raw is String
+            ? jsonDecode(raw) as List<dynamic>
+            : raw as List<dynamic>;
+
+        return data
+            .map((item) => CafeModel.fromJson(item as Map<String, dynamic>))
+            .toList();
       } else {
         throw Exception(
-          'El servidor respondio con codigo ${response.statusCode}',
+          'El servidor respondió con código ${response.statusCode}',
         );
       }
     } on DioException catch (dioError) {
       throw Exception(_interpretarDioError(dioError));
     } catch (e) {
-      throw Exception('Ocurrio un error inesperado al procesar los datos');
+      throw Exception('Ocurrió un error inesperado al procesar los datos: $e');
     }
-  } // <- aquí se cierra obtenerCafes()
+  }
 
   String _interpretarDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return 'El servidor tardo demasiado';
+        return 'El servidor tardó demasiado';
+
       case DioExceptionType.connectionError:
-        return 'No hay conexion a internet';
+        return 'No hay conexión a internet';
+
       case DioExceptionType.badResponse:
-        return 'Error en el servidor';
+        return 'Error en el servidor: ${error.response?.statusCode ?? ''}';
+
       case DioExceptionType.cancel:
-        return 'La peticion fue cancelada';
+        return 'La petición fue cancelada';
+
       default:
         return 'Error en la red';
     }

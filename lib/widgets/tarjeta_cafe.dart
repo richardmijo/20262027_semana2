@@ -24,7 +24,7 @@ class TarjetaCafe extends StatelessWidget {
                   width: 50,
                   height: 50,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) =>
+                  errorBuilder: (_, _, _) =>
                       const CircleAvatar(child: Icon(Icons.coffee)),
                 ),
               )
@@ -42,7 +42,10 @@ class TarjetaCafe extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-            Row(
+            Text('Horario: ${cafe.horario}'),
+            Wrap(
+              spacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,25 +54,14 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
+
                 Text('• ${etiqueta(cafe.calificacion)}'),
+                Text('★ ${cafe.calificacion.toStringAsFixed(1)}'),
                 if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
                 ],
               ],
             ),
-          ],
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
           ],
         ),
         onTap: alVisitar,
