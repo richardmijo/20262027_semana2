@@ -104,6 +104,7 @@ class _CafeScreenState extends State<CafeScreen> {
                   if (index == 0) {
                     return CabeceraResumen(
                       total: _cafes.length,
+                      mostrando: visibles.length,
                       conWifi: conWifi,
                       promedio: promedio,
                       soloWifi: _soloWifi,
