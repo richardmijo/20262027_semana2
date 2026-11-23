@@ -23,6 +23,7 @@ class _CafeScreenState extends State<CafeScreen> {
 
   // filtros
   bool _soloWifi = false;
+  bool _soloMejores = false;
   int _visitas = 0;
 
   @override
@@ -56,7 +57,11 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
+    final visibles = _cafes.where((c) {
+      final cumpleWifi = !_soloWifi || c.tieneWifi;
+      final cumpleMejores = !_soloMejores || c.calificacion >= 4.5;
+      return cumpleWifi && cumpleMejores;
+    }).toList();
     final (promedio, conWifi) = resumen(_cafes);
 
     return Scaffold(
@@ -82,8 +87,12 @@ class _CafeScreenState extends State<CafeScreen> {
               promedio: promedio,
               conWifi: conWifi,
               soloWifi: _soloWifi,
+              soloMejores: _soloMejores,
               onToogleWifi: (val) => setState(() {
                 _soloWifi = val;
+              }),
+              onToggleMejores: (val) => setState(() {
+                _soloMejores = val;
               }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
@@ -109,8 +118,11 @@ class _CafeScreenState extends State<CafeScreen> {
     // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
+        mensaje: 'No hay cafeterías que coincidan con los filtros seleccionados.',
+        etiquetaAccion: 'Quitar filtros',
         onAccion: () => setState(() {
           _soloWifi = false;
+          _soloMejores = false;
         }),
       );
     }
