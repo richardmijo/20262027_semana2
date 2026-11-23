@@ -25,16 +25,16 @@ class CafeService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          log('Dio request');
+          log('🌐 [DIO Request] ${options.method} -> ${options.uri}');
           return handler.next(options);
         },
-        onResponse: (options, handler) {
-          log('Dio response');
-          return handler.next(options);
+        onResponse: (response, handler) {
+          log('✅ [DIO Response ${response.statusCode}] desde ${response.requestOptions.path}');
+          return handler.next(response);
         },
-        onError: (options, handler) {
-          log('Dio error');
-          return handler.next(options);
+        onError: (error, handler) {
+          log('❌ [DIO Error] ${error.type} | ${error.message}');
+          return handler.next(error);
         },
       ),
     );
