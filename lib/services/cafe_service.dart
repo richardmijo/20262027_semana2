@@ -1,10 +1,13 @@
 import 'dart:developer';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:semana2/models/cafe_model.dart';
 
 class CafeService {
   late final Dio _dio;
+  bool usandoRespaldo = false;
 
   static const String _baseUrl = 'https://api.sampleapis.com';
   static const String _coffeEndpoint = '/coffee/hot';
@@ -41,6 +44,7 @@ class CafeService {
   }
 
   Future<List<CafeModel>> obtenerCafes() async {
+    usandoRespaldo = false;
     try {
       final reponse = await _dio.get(_coffeEndpoint);
       if (reponse.statusCode == 200) {
@@ -52,7 +56,17 @@ class CafeService {
         );
       }
     } on DioException catch (dioError) {
-      throw Exception(dioError);
+      final statusCode = dioError.response?.statusCode;
+      if (statusCode != null && statusCode >= 500) {
+        usandoRespaldo = true;
+        final jsonLocal = await rootBundle.loadString('assets/data/cafes.json');
+        final data = jsonDecode(jsonLocal) as List<dynamic>;
+        log('Sample API no disponible; usando JSON local de respaldo');
+        return data
+            .map((item) => CafeModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      }
+      throw Exception(interpretarDioError(dioError));
     } catch (e) {
       throw Exception('Ocurrio un error inesperado al procesar los datos');
     }
@@ -69,7 +83,7 @@ class CafeService {
         return 'No hay conexion a internet';
 
       case DioException.badResponse:
-        return 'Error en el servidor';
+        return 'Error en el servidor (${error.response?.statusCode ?? 'sin código'}).';
 
       case DioExceptionType.cancel:
         return 'La peticion fue cancelada';

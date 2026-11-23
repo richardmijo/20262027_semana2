@@ -6,6 +6,8 @@ class CabeceraResumen extends StatelessWidget {
   final int conWifi;
   final bool soloWifi;
   final ValueChanged<bool> onToogleWifi;
+  final bool mejorCalificadas;
+  final ValueChanged<bool> onToggleMejorCalificadas;
 
   const CabeceraResumen({
     super.key,
@@ -14,14 +16,16 @@ class CabeceraResumen extends StatelessWidget {
     required this.conWifi,
     required this.soloWifi,
     required this.onToogleWifi,
+    required this.mejorCalificadas,
+    required this.onToggleMejorCalificadas,
   });
 
   @override
   Widget build(BuildContext context) {
     final colores = Theme.of(context).colorScheme;
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +37,7 @@ class CabeceraResumen extends StatelessWidget {
                 size: 36,
                 color: colores.onPrimaryContainer,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
 
               Expanded(
                 child: Text(
@@ -46,17 +50,22 @@ class CabeceraResumen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'Calificacion promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
           ),
-          Divider(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Filtrar solo con Wi-Fi'),
-              Switch(value: soloWifi, onChanged: onToogleWifi),
-            ],
+          const Divider(height: 20),
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Filtrar solo con Wi-Fi'),
+            value: soloWifi,
+            onChanged: onToogleWifi,
+          ),
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Mejor calificadas (4,5 o más)'),
+            value: mejorCalificadas,
+            onChanged: onToggleMejorCalificadas,
           ),
         ],
       ),

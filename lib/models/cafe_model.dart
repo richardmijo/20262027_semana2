@@ -2,6 +2,7 @@ class CafeModel {
   final int id;
   final String nombre;
   final String descripcion;
+  final String? horario;
   final List<String> ingredientes;
   final String? imagenUrl;
   final double precio;
@@ -12,6 +13,7 @@ class CafeModel {
     required this.id,
     required this.nombre,
     required this.descripcion,
+    this.horario,
     required this.ingredientes,
     this.imagenUrl,
     this.precio = 2.25,
@@ -19,50 +21,30 @@ class CafeModel {
     this.tieneWifi = true,
   });
 
-<<<<<<< HEAD
-  //serializar
-=======
->>>>>>> main
   factory CafeModel.fromJson(Map<String, dynamic> json) {
     final rawId = json['id'];
-    final int parsedId = rawId is int
-        ? rawId
-        : (int.tryParse(rawId?.toString() ?? '') ?? 0);
+    final id = rawId is int ? rawId : int.tryParse('$rawId') ?? 0;
     final rawIngredients = json['ingredients'] ?? json['ingredientes'];
-    final List<String> parsedIngredients = rawIngredients is List
+    final ingredients = rawIngredients is List
         ? rawIngredients.map((item) => item.toString()).toList()
-        : [];
-<<<<<<< HEAD
+        : <String>[];
 
-=======
->>>>>>> main
     return CafeModel(
-      id: parsedId,
-      nombre: (json['title'] ?? json['nombre'] ?? 'Cafe Especial') as String,
+      id: id,
+      nombre: (json['title'] ?? json['nombre'] ?? 'Café especial').toString(),
       descripcion:
-          (json['description'] ??
-          json['descripcion'] ??
-<<<<<<< HEAD
-          'Delicioso cafe tostado'),
-=======
-          'Delicioso cafe tostado.'),
+          (json['description'] ?? json['descripcion'] ?? 'Delicioso café tostado')
+              .toString(),
+      ingredientes: ingredients,
+      horario: (json['horario'] ?? json['hours'])?.toString(),
       imagenUrl: (json['image'] ?? json['imagenUrl']) as String?,
->>>>>>> main
-      ingredientes: parsedIngredients,
-      precio:
-          (json['precio'] as num?)?.toDouble() ??
-          (1.75 + (parsedId % 4) * 0.50),
+      precio: (json['precio'] as num?)?.toDouble() ?? (1.75 + (id % 4) * 0.50),
       calificacion:
-          (json['calificacion'] as num?)?.toDouble() ??
-          (4.0 + (parsedId % 10) * 0.1),
-      tieneWifi: json['wifi'] as bool? ?? (parsedId % 2 == 0),
+          (json['calificacion'] as num?)?.toDouble() ?? (4.0 + (id % 10) * 0.1),
+      tieneWifi: json['wifi'] as bool? ?? id.isEven,
     );
   }
 
-  String get resumenIngredients =>
-<<<<<<< HEAD
-      ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(',');
-=======
-      ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(', ');
->>>>>>> main
+  String get resumenIngredientes =>
+      ingredientes.isEmpty ? 'Café de altura' : ingredientes.join(', ');
 }

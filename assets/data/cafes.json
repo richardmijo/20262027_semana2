@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Café de Loja",
+    "description": "Café de altura con notas achocolatadas.",
+    "ingredients": ["Café molido", "Agua"],
+    "precio": 2.25,
+    "calificacion": 4.4,
+    "wifi": true,
+    "horario": "07:00–18:00"
+  },
+  {
+    "id": 2,
+    "title": "La Taza Andina",
+    "description": "Espresso intenso preparado al momento.",
+    "ingredients": ["Espresso"],
+    "precio": 1.75,
+    "calificacion": 4.2,
+    "wifi": true,
+    "horario": "08:00–19:00"
+  },
+  {
+    "id": 3,
+    "title": "Rincón del Valle",
+    "description": "Café suave con leche espumada.",
+    "ingredients": ["Café", "Leche"],
+    "precio": 2.5,
+    "calificacion": 4.3,
+    "wifi": true,
+    "horario": "07:30–17:30"
+  },
+  {
+    "id": 4,
+    "title": "Café San Sebastián",
+    "description": "Preparación artesanal de tueste medio.",
+    "ingredients": ["Café de Loja", "Agua"],
+    "precio": 2.0,
+    "calificacion": 4.7,
+    "wifi": false,
+    "horario": "09:00–18:00"
+  }
+]

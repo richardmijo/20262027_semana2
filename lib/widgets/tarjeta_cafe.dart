@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/cafe_model.dart';
 import '../utils/cafe_helpers.dart';
 
-/// Tarjeta para cada elemento de la lista de cafés proveniente de la API REST.
 class TarjetaCafe extends StatelessWidget {
   final CafeModel cafe;
   final VoidCallback alVisitar;
@@ -36,13 +35,18 @@ class TarjetaCafe extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(cafe.descripcion, maxLines: 2, overflow: TextOverflow.ellipsis),
+            const SizedBox(height: 4),
             Text(
-              cafe.descripcion,
+              'Ingredientes: ${cafe.resumenIngredientes}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
+            Text('Horario: ${cafe.horario ?? 'No disponible'}'),
             const SizedBox(height: 4),
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,25 +55,12 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
-                Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                Text('⭐ ${cafe.calificacion.toStringAsFixed(1)}'),
+                Text(etiqueta(cafe.calificacion)),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
-          ],
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
           ],
         ),
         onTap: alVisitar,
