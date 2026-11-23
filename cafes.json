@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "title": "Café de la Puerta",
+    "description": "Café tradicional lojano de altura tostado artesanalmente.",
+    "ingredients": [
+      "Café arábica",
+      "Agua de vertiente"
+    ],
+    "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400",
+    "direccion": "Calle Bolívar y 10 de Agosto (Centro)",
+    "horario": "07:30 - 20:30",
+    "precio": 2.5,
+    "calificacion": 4.8,
+    "wifi": true
+  },
+  {
+    "id": 2,
+    "title": "Rincón de San Sebastián",
+    "description": "Ambiente bohemio y colonial con el mejor café filtrado.",
+    "ingredients": [
+      "Café lavado",
+      "Notas cítricas"
+    ],
+    "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400",
+    "direccion": "Plaza de San Sebastián (Frente al museo)",
+    "horario": "08:00 - 21:00",
+    "precio": 2.75,
+    "calificacion": 4.6,
+    "wifi": true
+  },
+  {
+    "id": 3,
+    "title": "Café del Valle",
+    "description": "Especialidad en café pasado y empanadas tradicionales.",
+    "ingredients": [
+      "Café típico",
+      "Panela orgánica"
+    ],
+    "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400",
+    "direccion": "Av. Salvador Bustamante Celi (El Valle)",
+    "horario": "07:00 - 19:30",
+    "precio": 1.75,
+    "calificacion": 4.2,
+    "wifi": false
+  },
+  {
+    "id": 4,
+    "title": "Café del Zamora",
+    "description": "Vista panorámica al río con café cosechado en Vilcabamba.",
+    "ingredients": [
+      "Café Vilcabamba",
+      "Cacao fino de aroma"
+    ],
+    "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400",
+    "direccion": "Paseo de Zamora (Zamora Huayco)",
+    "horario": "09:00 - 22:00",
+    "precio": 3.0,
+    "calificacion": 4.7,
+    "wifi": true
+  },
+  {
+    "id": 5,
+    "title": "Espresso Loja Centro",
+    "description": "Para estudiar y trabajar con enchufes y conexión de alta velocidad.",
+    "ingredients": [
+      "Espresso doble",
+      "Leche vaporizada"
+    ],
+    "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400",
+    "direccion": "Calle 10 de Agosto y Sucre",
+    "horario": "07:00 - 22:00",
+    "precio": 2.25,
+    "calificacion": 4.1,
+    "wifi": true
+  },
+  {
+    "id": 6,
+    "title": "Cafetería La Catedral",
+    "description": "Clásica cafetería junto al parque central con aroma a canela.",
+    "ingredients": [
+      "Café negro",
+      "Canela"
+    ],
+    "image": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400",
+    "direccion": "Calle Bernardo Valdivieso (Parque Central)",
+    "horario": "08:00 - 20:00",
+    "precio": 1.5,
+    "calificacion": 3.9,
+    "wifi": false
+  }
+]

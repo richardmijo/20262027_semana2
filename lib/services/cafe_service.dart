@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -6,15 +7,17 @@ import 'package:semana2/models/cafe_model.dart';
 class CafeService {
   late final Dio _dio;
 
-  static const String _baseUrl = 'https://api.sampleapis.com';
-  static const String _coffeEndpoint = '/coffee/hot';
+  // Endpoint 100% estable, sin caídas y con CORS habilitado (GitHub Raw)
+  static const String _baseUrl = 'https://raw.githubusercontent.com';
+  static const String _coffeEndpoint =
+      '/richardmijo/20262027_semana2/main/cafes.json';
 
   CafeService() {
     _dio = Dio(
       BaseOptions(
         baseUrl: _baseUrl,
-        connectTimeout: Duration(seconds: 8),
-        receiveTimeout: Duration(seconds: 8),
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -42,19 +45,26 @@ class CafeService {
 
   Future<List<CafeModel>> obtenerCafes() async {
     try {
-      final reponse = await _dio.get(_coffeEndpoint);
-      if (reponse.statusCode == 200) {
-        final List<dynamic> data = reponse.data as List<dynamic>;
-        return data.map((item) => CafeModel.fromJson(item)).toList();
+      final response = await _dio.get(_coffeEndpoint);
+      if (response.statusCode == 200) {
+        // Maneja tanto List directo como String serializado en texto plano
+        final dynamic raw = response.data;
+        final List<dynamic> data = raw is String
+            ? jsonDecode(raw) as List<dynamic>
+            : raw as List<dynamic>;
+
+        return data
+            .map((item) => CafeModel.fromJson(item as Map<String, dynamic>))
+            .toList();
       } else {
         throw Exception(
-          'El servidor respondio con codifo ${reponse.statusCode}',
+          'El servidor respondió con código ${response.statusCode}',
         );
       }
     } on DioException catch (dioError) {
       throw Exception(_interpretarDioError(dioError));
     } catch (e) {
-      throw Exception('Ocurrio un erros inesperado al procesar los datos');
+      throw Exception('Ocurrió un error inesperado al procesar los datos: $e');
     }
   }
 
@@ -69,10 +79,10 @@ class CafeService {
         return 'No hay conexión a internet';
 
       case DioExceptionType.badResponse:
-        return 'Error en el servidor';
+        return 'Error en el servidor: ${error.response?.statusCode ?? ''}';
 
       case DioExceptionType.cancel:
-        return 'La petición fue cacelada';
+        return 'La petición fue cancelada';
 
       default:
         return 'Error en la red';
