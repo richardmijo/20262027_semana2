@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:semana2/models/cafe_model.dart';
 import 'package:semana2/services/cafe_service.dart';
-import 'package:semana2/utils/cafe_helpers.dart';
 import 'package:semana2/widgets/cabecera_resumen.dart';
 import 'package:semana2/widgets/estados_vista.dart';
 import 'package:semana2/widgets/tarjeta_cafe.dart';
 
-class cafeScreen extends StatefulWidget {
-  const cafeScreen({super.key});
+import '../utils/cafe_helpers.dart';
+
+class CafeScreen extends StatefulWidget {
+  const CafeScreen({super.key});
 
   @override
-  State<cafeScreen> createState() => _cafeScreenState();
+  State<CafeScreen> createState() => _CafeScreenState();
 }
 
-class _cafeScreenState extends State<cafeScreen> {
+class _CafeScreenState extends State<CafeScreen> {
   final CafeService _cafeService = CafeService();
+
   bool _cargando = true;
   String? _error;
   List<CafeModel> _cafes = [];
@@ -46,7 +48,7 @@ class _cafeScreenState extends State<cafeScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = e.toString().replaceFirst('Exception: ', '');
         _cargando = false;
       });
     }
@@ -54,13 +56,12 @@ class _cafeScreenState extends State<cafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes
-        .where((cafe) => !_soloWifi || cafe.tieneWifi)
-        .toList();
+    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
     final (promedio, conWifi) = resumen(_cafes);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(' Cafes de loja'),
+        title: Text('Cafes de Loja'),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -81,7 +82,7 @@ class _cafeScreenState extends State<cafeScreen> {
               promedio: promedio,
               conWifi: conWifi,
               soloWifi: _soloWifi,
-              onToggleWifi: (val) => setState(() {
+              onToogleWifi: (val) => setState(() {
                 _soloWifi = val;
               }),
             ),
@@ -97,7 +98,7 @@ class _cafeScreenState extends State<cafeScreen> {
   }
 
   Widget _construirCuerpo(List<CafeModel> visibles) {
-    // Estado 1: Cargando
+    // Etado 1: cargando
     if (_cargando) {
       return EstadoCargando();
     }
@@ -113,7 +114,7 @@ class _cafeScreenState extends State<cafeScreen> {
         }),
       );
     }
-    // Estado 4: Los datos
+    // Estado 4: los datos
     return RefreshIndicator(
       onRefresh: _cargarCafes,
       child: ListView.builder(
@@ -122,9 +123,11 @@ class _cafeScreenState extends State<cafeScreen> {
           final cafe = visibles[index];
           return TarjetaCafe(
             cafe: cafe,
-            alVisitar: () => setState(() {
-              _visitas++;
-            }),
+            alVisitar: () {
+              setState(() {
+                _visitas++;
+              });
+            },
           );
         },
       ),
