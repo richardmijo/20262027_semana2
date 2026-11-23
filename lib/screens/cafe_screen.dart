@@ -8,14 +8,16 @@ import 'package:semana2/widgets/tarjeta_cafe.dart';
 import '../utils/cafe_helpers.dart';
 
 class CafeScreen extends StatefulWidget {
-  const CafeScreen({super.key});
+  final CafeService? servicio;
+
+  const CafeScreen({super.key, this.servicio});
 
   @override
   State<CafeScreen> createState() => _CafeScreenState();
 }
 
 class _CafeScreenState extends State<CafeScreen> {
-  final CafeService _cafeService = CafeService();
+  late final CafeService _cafeService = widget.servicio ?? CafeService();
 
   bool _cargando = true;
   String? _error;
@@ -23,6 +25,7 @@ class _CafeScreenState extends State<CafeScreen> {
 
   // filtros
   bool _soloWifi = false;
+  bool _soloMejores = false;
   int _visitas = 0;
 
   @override
@@ -56,8 +59,11 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
-    final (promedio, conWifi) = resumen(_cafes);
+    final visibles = filtrarCafes(
+      _cafes,
+      soloWifi: _soloWifi,
+      soloMejoresCalificadas: _soloMejores,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -74,21 +80,7 @@ class _CafeScreenState extends State<CafeScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          if (!_cargando && _error == null)
-            CabeceraResumen(
-              total: _cafes.length,
-              promedio: promedio,
-              conWifi: conWifi,
-              soloWifi: _soloWifi,
-              onToogleWifi: (val) => setState(() {
-                _soloWifi = val;
-              }),
-            ),
-          Expanded(child: _construirCuerpo(visibles)),
-        ],
-      ),
+      body: _construirCuerpo(visibles),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _cargarCafes,
         label: Text('Recargar API'),
@@ -106,21 +98,50 @@ class _CafeScreenState extends State<CafeScreen> {
     if (_error != null) {
       return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-    // Estado 3: Vacio
+    final (promedio, conWifi) = resumen(_cafes);
+    final cabecera = CabeceraResumen(
+      total: _cafes.length,
+      promedio: promedio,
+      conWifi: conWifi,
+      soloWifi: _soloWifi,
+      soloMejoresCalificadas: _soloMejores,
+      onToggleWifi: (val) => setState(() => _soloWifi = val),
+      onToggleMejoresCalificadas: (val) => setState(() => _soloMejores = val),
+    );
+
+    // Estado 3: Vacio por filtros (la cabecera sigue visible)
     if (visibles.isEmpty) {
-      return EstadoVacio(
-        onAccion: () => setState(() {
-          _soloWifi = false;
-        }),
+      return LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              children: [
+                cabecera,
+                const SizedBox(height: 24),
+                EstadoVacio(
+                  onAccion: () => setState(() {
+                    _soloWifi = false;
+                    _soloMejores = false;
+                  }),
+                ),
+              ],
+            ),
+          ),
+        ),
       );
     }
     // Estado 4: los datos
     return RefreshIndicator(
       onRefresh: _cargarCafes,
       child: ListView.builder(
-        itemCount: visibles.length,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(bottom: 88),
+        itemCount: visibles.length + 1,
         itemBuilder: (context, index) {
-          final cafe = visibles[index];
+          if (index == 0) return cabecera;
+          final cafe = visibles[index - 1];
           return TarjetaCafe(
             cafe: cafe,
             alVisitar: () {

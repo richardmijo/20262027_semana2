@@ -5,7 +5,9 @@ class CabeceraResumen extends StatelessWidget {
   final double promedio;
   final int conWifi;
   final bool soloWifi;
-  final ValueChanged<bool> onToogleWifi;
+  final bool soloMejoresCalificadas;
+  final ValueChanged<bool> onToggleWifi;
+  final ValueChanged<bool> onToggleMejoresCalificadas;
 
   const CabeceraResumen({
     super.key,
@@ -13,7 +15,9 @@ class CabeceraResumen extends StatelessWidget {
     required this.promedio,
     required this.conWifi,
     required this.soloWifi,
-    required this.onToogleWifi,
+    required this.soloMejoresCalificadas,
+    required this.onToggleWifi,
+    required this.onToggleMejoresCalificadas,
   });
 
   @override
@@ -37,8 +41,7 @@ class CabeceraResumen extends StatelessWidget {
                 size: 36,
                 color: colores.onPrimaryContainer,
               ),
-              SizedBox(width: 12),
-
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   '$total Cafeterias disponibles',
@@ -50,20 +53,46 @@ class CabeceraResumen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'Calificacion promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
           ),
-          Divider(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Filtrar solo con Wi-Fi'),
-              Switch(value: soloWifi, onChanged: onToogleWifi),
-            ],
+          const Divider(height: 20),
+          _FilaFiltro(
+            texto: 'Filtrar solo con Wi-Fi',
+            valor: soloWifi,
+            onChanged: onToggleWifi,
+          ),
+          _FilaFiltro(
+            texto: 'Mejor calificadas',
+            valor: soloMejoresCalificadas,
+            onChanged: onToggleMejoresCalificadas,
           ),
         ],
       ),
+    );
+  }
+}
+
+class _FilaFiltro extends StatelessWidget {
+  final String texto;
+  final bool valor;
+  final ValueChanged<bool> onChanged;
+
+  const _FilaFiltro({
+    required this.texto,
+    required this.valor,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: Text(texto)),
+        const SizedBox(width: 8),
+        Switch(value: valor, onChanged: onChanged),
+      ],
     );
   }
 }

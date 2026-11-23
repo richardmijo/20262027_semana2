@@ -14,6 +14,24 @@ String etiqueta(double? calificacion) => switch (calificacion) {
   _ => 'Para probar',
 };
 
+const double calificacionMinimaDestacada = 4.5;
+
+/// Aplica ambos filtros sobre la lista original sin modificarla.
+List<CafeModel> filtrarCafes(
+  List<CafeModel> cafes, {
+  required bool soloWifi,
+  required bool soloMejoresCalificadas,
+}) {
+  return cafes
+      .where(
+        (c) =>
+            (!soloWifi || c.tieneWifi) &&
+            (!soloMejoresCalificadas ||
+                c.calificacion >= calificacionMinimaDestacada),
+      )
+      .toList();
+}
+
 // RECORDS
 (double promedio, int conWifi) resumen(List<CafeModel> lista) {
   final calificados = lista

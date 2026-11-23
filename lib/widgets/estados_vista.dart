@@ -43,7 +43,7 @@ class EstadoError extends StatelessWidget {
             Icon(Icons.cloud_off, size: 70, color: Colors.redAccent),
             SizedBox(height: 16),
             Text(
-              '¡Ups! No pudimos obtenes los cafes',
+              '¡Ups! No pudimos obtener los cafés',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
@@ -76,23 +76,30 @@ class EstadoVacio extends StatelessWidget {
 
   const EstadoVacio({
     super.key,
-    this.mensaje = 'No hay cafeterías que coincidan con el filtro.',
+    this.mensaje = 'No encontramos cafeterías con estos filtros',
     required this.onAccion,
-    this.etiquetaAccion = 'Quitar filtro de Wi-Fi',
+    this.etiquetaAccion = 'Quitar filtros',
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.search_off, size: 64, color: Colors.orange),
-          const SizedBox(height: 12),
-          Text(mensaje, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 8),
-          TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.search_off, size: 64, color: Colors.orange),
+            const SizedBox(height: 12),
+            Text(
+              mensaje,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
+          ],
+        ),
       ),
     );
   }

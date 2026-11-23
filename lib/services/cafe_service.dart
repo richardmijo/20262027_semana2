@@ -85,23 +85,3 @@ class CafeService {
     }
   }
 }
-String _interpretarDioError(DioException error) {
-  switch (error.type) {
-    case DioExceptionType.connectionTimeout:
-    case DioExceptionType.sendTimeout:
-    case DioExceptionType.receiveTimeout:
-      return 'El servidor tardó demasiado';
-
-    case DioExceptionType.connectionError:
-      return 'No hay conexión a internet';
-
-    case DioExceptionType.badResponse:
-      return 'Error en el servidor';
-
-    case DioExceptionType.cancel:
-      return 'La petición fue cancelada';
-
-    default:
-      return 'Error en la red';
-  }
-}
