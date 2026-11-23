@@ -21,8 +21,7 @@ class _CafeScreenState extends State<CafeScreen> {
   String? _error;
   List<CafeModel> _cafes = [];
 
-  // filtroos
-
+  // filtros
   bool _soloWifi = false;
   int _visitas = 0;
 
@@ -41,6 +40,7 @@ class _CafeScreenState extends State<CafeScreen> {
     try {
       final resultado = await _cafeService.obtenerCafes();
       if (!mounted) return;
+
       setState(() {
         _cafes = resultado;
         _cargando = false;
@@ -48,7 +48,7 @@ class _CafeScreenState extends State<CafeScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = e.toString().replaceFirst('Exception: ', '');
         _cargando = false;
       });
     }
@@ -61,14 +61,14 @@ class _CafeScreenState extends State<CafeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cafes de Loja'),
+        title: Text('Cafes de Loja'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16),
+            padding: EdgeInsets.only(right: 16),
             child: Center(
               child: Badge(
                 label: Text('$_visitas'),
-                child: const Icon(Icons.place_outlined),
+                child: Icon(Icons.place_outlined),
               ),
             ),
           ),
@@ -76,17 +76,13 @@ class _CafeScreenState extends State<CafeScreen> {
       ),
       body: Column(
         children: [
-          if (_cargando)
-            const Expanded(child: Center(child: CircularProgressIndicator())),
-          if (_error != null)
-            Padding(padding: const EdgeInsets.all(16), child: Text(_error!)),
           if (!_cargando && _error == null)
             CabeceraResumen(
               total: _cafes.length,
               promedio: promedio,
-              totalWifi: conWifi,
+              conWifi: conWifi,
               soloWifi: _soloWifi,
-              onToggleWifi: (val) => setState(() {
+              onToogleWifi: (val) => setState(() {
                 _soloWifi = val;
               }),
             ),
@@ -95,23 +91,22 @@ class _CafeScreenState extends State<CafeScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _cargarCafes,
-        label: const Text('Recargar API'),
-        icon: const Icon(Icons.refresh),
+        label: Text('Recargar API'),
+        icon: Icon(Icons.refresh),
       ),
     );
   }
 
   Widget _construirCuerpo(List<CafeModel> visibles) {
-    //estado 1
+    // Etado 1: cargando
     if (_cargando) {
       return EstadoCargando();
     }
-    //estado 2
+    // Estado 2: Error
     if (_error != null) {
       return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-
-    //estado 3
+    // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
         onAccion: () => setState(() {
@@ -119,7 +114,7 @@ class _CafeScreenState extends State<CafeScreen> {
         }),
       );
     }
-    //estado 4
+    // Estado 4: los datos
     return RefreshIndicator(
       onRefresh: _cargarCafes,
       child: ListView.builder(
