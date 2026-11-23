@@ -36,7 +36,7 @@ class CabeceraResumen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.coffee, size: 36, color: colores.primary),
+              Icon(Icons.coffee_rounded, size: 36, color: colores.primary),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -51,10 +51,10 @@ class CabeceraResumen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Calificacion promedio: ${promedio.toStringAsFixed(1)} - '
+            'Calificacion promedio ${promedio.toStringAsFixed(1)} - '
             '$conWifi con Wi-Fi',
           ),
-          Divider(height: 20),
+          const Divider(height: 20),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
             crossAxisAlignment: WrapCrossAlignment.center,

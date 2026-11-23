@@ -45,7 +45,7 @@ class _CafeScreenState extends State<CafeScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = e.toString().replaceFirst('Exception: ', '');
         _cargando = false;
       });
     }
@@ -85,11 +85,11 @@ class _CafeScreenState extends State<CafeScreen> {
               conWifi: conWifi,
               soloWifi: _soloWifi,
               soloMejorCalificadas: _soloMejorCalificadas,
-              onToogleWifi: (val) => setState(() {
-                _soloWifi = val;
+              onToogleWifi: (value) => setState(() {
+                _soloWifi = value;
               }),
-              onToogleMejorCalificadas: (val) => setState(() {
-                _soloMejorCalificadas = val;
+              onToogleMejorCalificadas: (value) => setState(() {
+                _soloMejorCalificadas = value;
               }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
@@ -104,14 +104,10 @@ class _CafeScreenState extends State<CafeScreen> {
   }
 
   Widget _construirCuerpo(List<CafeModel> visibles) {
-    if (_cargando) {
-      return const EstadoCargando();
-    }
-
+    if (_cargando) return const EstadoCargando();
     if (_error != null) {
       return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-
     if (visibles.isEmpty) {
       return EstadoVacio(
         onAccion: () => setState(() {

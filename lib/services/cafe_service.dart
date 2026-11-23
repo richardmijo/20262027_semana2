@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:semana2/models/cafe_model.dart';
@@ -7,6 +7,7 @@ import 'package:semana2/models/cafe_model.dart';
 class CafeService {
   late final Dio _dio;
 
+  // Endpoint estable servido desde GitHub Raw.
   static const String _baseUrl = 'https://raw.githubusercontent.com';
   static const String _coffeEndpoint =
       '/richardmijo/20262027_semana2/main/cafes.json';
@@ -15,24 +16,26 @@ class CafeService {
     _dio = Dio(
       BaseOptions(
         baseUrl: _baseUrl,
-        connectTimeout: Duration(seconds: 8),
-        receiveTimeout: Duration(seconds: 8),
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
       ),
     );
 
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          log('Dio request');
+          log('🌐 [DIO Request] ${options.method} -> ${options.uri}');
           return handler.next(options);
         },
-        onResponse: (options, handler) {
-          log('Dio response');
-          return handler.next(options);
+        onResponse: (response, handler) {
+          log(
+            '✅ [DIO Response ${response.statusCode}] desde ${response.requestOptions.path}',
+          );
+          return handler.next(response);
         },
-        onError: (options, handler) {
-          log('Dio error');
-          return handler.next(options);
+        onError: (error, handler) {
+          log('❌ [DIO Error] ${error.type} | ${error.message}');
+          return handler.next(error);
         },
       ),
     );
@@ -46,20 +49,22 @@ class CafeService {
         final List<dynamic> data = raw is String
             ? jsonDecode(raw) as List<dynamic>
             : raw as List<dynamic>;
-        return data.map((item) => CafeModel.fromJson(item)).toList();
+        return data
+            .map((item) => CafeModel.fromJson(item as Map<String, dynamic>))
+            .toList();
       } else {
         throw Exception(
           'El servidor respondió con código ${response.statusCode}',
         );
       }
     } on DioException catch (dioError) {
-      throw Exception(_interpreterDioError(dioError));
+      throw Exception(_interpretarDioError(dioError));
     } catch (e) {
-      throw Exception('Ocurrió un error inesperado al procesar los datos');
+      throw Exception('Ocurrió un error inesperado al procesar los datos: $e');
     }
   }
 
-  String _interpreterDioError(DioException error) {
+  String _interpretarDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -67,17 +72,16 @@ class CafeService {
         return 'El servidor tardó demasiado';
 
       case DioExceptionType.connectionError:
-        return 'No hay conexión de internet'; // <-- Faltaba el punto y coma
+        return 'No hay conexión a internet';
 
-      case DioExceptionType
-          .badResponse: // <-- Corregido "dabResponse" por "badResponse"
-        return "Error en el servidor";
+      case DioExceptionType.badResponse:
+        return 'Error en el servidor: ${error.response?.statusCode ?? ''}';
 
       case DioExceptionType.cancel:
-        return "La petición fue cancelada";
+        return 'La petición fue cancelada';
 
       default:
-        return "Ocurrió un error en la red"; // <-- Corregido "ed" por "red"
+        return 'Error en la red';
     }
   }
 }

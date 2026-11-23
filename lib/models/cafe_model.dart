@@ -19,7 +19,7 @@ class CafeModel {
     this.precio = 2.25,
     this.calificacion = 4.5,
     this.tieneWifi = true,
-    this.direccion = 'Calle Bolívar y 10 de Agosto',
+    this.direccion = 'Calle Bolívar y 10 de Agosto (Centro)',
     this.horario = '07:30 - 21:00',
   });
 
