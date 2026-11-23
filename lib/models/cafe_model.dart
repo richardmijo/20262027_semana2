@@ -5,9 +5,15 @@ class CafeModel {
   final List<String> ingredientes;
   final String? imagenUrl;
   final double precio;
-  final double calificacion;
+
+  /// Calificación tal como viene en el JSON. Es `null` si la cafetería no
+  /// tiene calificación: así nunca entra por error en "Mejor calificadas".
+  final double? calificacion;
   final bool tieneWifi;
-  final String direccion;
+
+  /// Dirección real tomada del JSON (`direccion` o `address`).
+  /// Es `null` si el JSON no la trae; no se inventa una dirección.
+  final String? direccion;
   final String horario;
 
   CafeModel({
@@ -17,9 +23,9 @@ class CafeModel {
     required this.ingredientes,
     this.imagenUrl,
     this.precio = 2.25,
-    this.calificacion = 4.5,
+    this.calificacion,
     this.tieneWifi = true,
-    this.direccion = 'Calle Bolívar y 10 de Agosto (Centro)',
+    this.direccion,
     this.horario = '07:30 - 21:00',
   });
 
@@ -44,21 +50,30 @@ class CafeModel {
       precio:
           (json['precio'] as num?)?.toDouble() ??
           (1.75 + (parsedId % 4) * 0.50),
-      calificacion:
-          (json['calificacion'] as num?)?.toDouble() ??
-          (4.0 + (parsedId % 10) * 0.1),
+      calificacion: _numeroOpcional(json['calificacion']),
       tieneWifi: json['wifi'] as bool? ?? (parsedId % 2 == 0),
-      direccion: (json['direccion'] ??
-              json['address'] ??
-              'Calle Bolívar ${(parsedId * 103) % 900 + 100}')
-          as String,
-      horario: (json['horario'] ??
-              json['schedule'] ??
-              '0${7 + (parsedId % 3)}:00 - 2${0 + (parsedId % 3)}:00')
-          as String,
+      direccion: _textoOpcional(json['direccion'] ?? json['address']),
+      horario:
+          (json['horario'] ??
+                  json['schedule'] ??
+                  '0${7 + (parsedId % 3)}:00 - 2${0 + (parsedId % 3)}:00')
+              as String,
     );
   }
 
   String get resumenIngredients =>
       ingredientes.isEmpty ? 'Cafe de altura' : ingredientes.join(', ');
+
+  /// Acepta un número (`4.5`) o un texto numérico (`"4.5"`); si no, `null`.
+  static double? _numeroOpcional(Object? valor) => switch (valor) {
+    num n => n.toDouble(),
+    String s => double.tryParse(s.trim()),
+    _ => null,
+  };
+
+  /// Devuelve el texto sin espacios sobrantes, o `null` si viene vacío.
+  static String? _textoOpcional(Object? valor) {
+    final texto = valor?.toString().trim() ?? '';
+    return texto.isEmpty ? null : texto;
+  }
 }

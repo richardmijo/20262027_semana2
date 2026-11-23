@@ -34,20 +34,25 @@ class EstadoError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SingleChildScrollView: con letra grande el contenido se desplaza
+    // en lugar de desbordarse.
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: EdgeInsets.all(24.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.cloud_off, size: 70, color: Colors.redAccent),
             SizedBox(height: 16),
             Text(
-              '¡Ups! No pudimos obtenes los cafes',
+              'No pudimos cargar las cafeterías. '
+              'Revisa tu conexión e inténtalo de nuevo.',
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
 
+            // Detalle técnico real que devuelve el servicio (p. ej. sin red).
             Text(
               mensaje,
               textAlign: TextAlign.center,
@@ -58,7 +63,7 @@ class EstadoError extends StatelessWidget {
 
             ElevatedButton.icon(
               onPressed: onReintentar,
-              label: Text('Reintentar conexión'),
+              label: Text('Reintentar'),
               icon: Icon(Icons.replay),
             ),
           ],
@@ -76,23 +81,30 @@ class EstadoVacio extends StatelessWidget {
 
   const EstadoVacio({
     super.key,
-    this.mensaje = 'No hay cafeterías que coincidan con el filtro.',
+    this.mensaje = 'No encontramos cafeterías con estos filtros.',
     required this.onAccion,
-    this.etiquetaAccion = 'Quitar filtro de Wi-Fi',
+    this.etiquetaAccion = 'Limpiar filtros',
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.search_off, size: 64, color: Colors.orange),
-          const SizedBox(height: 12),
-          Text(mensaje, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 8),
-          TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.search_off, size: 64, color: Colors.orange),
+            const SizedBox(height: 12),
+            Text(
+              mensaje,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
+          ],
+        ),
       ),
     );
   }

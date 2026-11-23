@@ -8,14 +8,18 @@ import 'package:semana2/widgets/tarjeta_cafe.dart';
 import '../utils/cafe_helpers.dart';
 
 class CafeScreen extends StatefulWidget {
-  const CafeScreen({super.key});
+  /// Servicio opcional: en la app se usa el real; en las pruebas se pasa uno
+  /// controlado para poder provocar los estados vacío y error.
+  final CafeService? servicio;
+
+  const CafeScreen({super.key, this.servicio});
 
   @override
   State<CafeScreen> createState() => _CafeScreenState();
 }
 
 class _CafeScreenState extends State<CafeScreen> {
-  final CafeService _cafeService = CafeService();
+  late final CafeService _cafeService = widget.servicio ?? CafeService();
 
   bool _cargando = true;
   String? _error;
@@ -23,6 +27,7 @@ class _CafeScreenState extends State<CafeScreen> {
 
   // filtros
   bool _soloWifi = false;
+  bool _soloMejorCalificadas = false;
   int _visitas = 0;
 
   @override
@@ -54,11 +59,15 @@ class _CafeScreenState extends State<CafeScreen> {
     }
   }
 
+  void _limpiarFiltros() {
+    setState(() {
+      _soloWifi = false;
+      _soloMejorCalificadas = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
-    final (promedio, conWifi) = resumen(_cafes);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Cafes de Loja'),
@@ -74,21 +83,7 @@ class _CafeScreenState extends State<CafeScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          if (!_cargando && _error == null)
-            CabeceraResumen(
-              total: _cafes.length,
-              promedio: promedio,
-              conWifi: conWifi,
-              soloWifi: _soloWifi,
-              onToogleWifi: (val) => setState(() {
-                _soloWifi = val;
-              }),
-            ),
-          Expanded(child: _construirCuerpo(visibles)),
-        ],
-      ),
+      body: _construirCuerpo(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _cargarCafes,
         label: Text('Recargar API'),
@@ -97,39 +92,70 @@ class _CafeScreenState extends State<CafeScreen> {
     );
   }
 
-  Widget _construirCuerpo(List<CafeModel> visibles) {
-    // Etado 1: cargando
+  Widget _construirCuerpo() {
+    // Estado 1: cargando
     if (_cargando) {
       return EstadoCargando();
     }
-    // Estado 2: Error
+    // Estado 2: error de carga (red, tiempo de espera, servidor o formato)
     if (_error != null) {
       return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-    // Estado 3: Vacio
-    if (visibles.isEmpty) {
-      return EstadoVacio(
-        onAccion: () => setState(() {
-          _soloWifi = false;
-        }),
-      );
-    }
-    // Estado 4: los datos
+
+    final visibles = filtrarCafes(
+      _cafes,
+      soloWifi: _soloWifi,
+      soloMejorCalificadas: _soloMejorCalificadas,
+    );
+    final (promedio, conWifi) = resumen(_cafes);
+
+    // La cabecera va dentro del scroll: con letra grande no se desborda.
     return RefreshIndicator(
       onRefresh: _cargarCafes,
-      child: ListView.builder(
-        itemCount: visibles.length,
-        itemBuilder: (context, index) {
-          final cafe = visibles[index];
-          return TarjetaCafe(
-            cafe: cafe,
-            alVisitar: () {
-              setState(() {
-                _visitas++;
-              });
-            },
-          );
-        },
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(
+            child: CabeceraResumen(
+              total: _cafes.length,
+              mostrando: visibles.length,
+              promedio: promedio,
+              conWifi: conWifi,
+              soloWifi: _soloWifi,
+              onToogleWifi: (val) => setState(() {
+                _soloWifi = val;
+              }),
+              soloMejorCalificadas: _soloMejorCalificadas,
+              onToggleMejorCalificadas: (val) => setState(() {
+                _soloMejorCalificadas = val;
+              }),
+            ),
+          ),
+          // Estado 3: datos cargados, pero ningún resultado con estos filtros
+          if (visibles.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: EstadoVacio(onAccion: _limpiarFiltros),
+            )
+          // Estado 4: los datos
+          else
+            SliverList.builder(
+              itemCount: visibles.length,
+              itemBuilder: (context, index) {
+                final cafe = visibles[index];
+                return TarjetaCafe(
+                  cafe: cafe,
+                  alVisitar: () {
+                    setState(() {
+                      _visitas++;
+                    });
+                  },
+                );
+              },
+            ),
+          // Espacio para que el botón flotante no tape la última tarjeta.
+          const SliverToBoxAdapter(child: SizedBox(height: 88)),
+        ],
       ),
     );
   }

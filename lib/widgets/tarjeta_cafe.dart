@@ -24,7 +24,7 @@ class TarjetaCafe extends StatelessWidget {
                   width: 50,
                   height: 50,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) =>
+                  errorBuilder: (_, _, _) =>
                       const CircleAvatar(child: Icon(Icons.coffee)),
                 ),
               )
@@ -41,8 +41,26 @@ class TarjetaCafe extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
+            // Dato nuevo: la dirección real que viene en el JSON.
+            if (cafe.direccion != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.location_on_outlined, size: 16),
+                  const SizedBox(width: 4),
+                  // Expanded deja que la dirección salte de línea en vez de
+                  // desbordarse cuando la letra del teléfono es grande.
+                  Expanded(child: Text(cafe.direccion!)),
+                ],
+              ),
+            ],
             const SizedBox(height: 4),
-            Row(
+            // Wrap pasa los elementos a otra línea si no caben.
+            Wrap(
+              spacing: 8,
+              runSpacing: 2,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,26 +69,16 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
           ],
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
-          ],
+        trailing: Text(
+          '⭐ ${cafe.calificacion?.toStringAsFixed(1) ?? '–'}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         onTap: alVisitar,
       ),
