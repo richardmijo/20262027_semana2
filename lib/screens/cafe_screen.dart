@@ -21,6 +21,7 @@ class _CafeScreenState extends State<CafeScreen> {
   List<CafeModel> _cafes = [];
   bool _soloWifi = false;
   bool _soloMejorCalificadas = false;
+  bool _soloEconomicas = false;
   int _visitas = 0;
 
   @override
@@ -57,7 +58,8 @@ class _CafeScreenState extends State<CafeScreen> {
       final cumpleWifi = !_soloWifi || cafe.tieneWifi;
       final cumpleCalificacion =
           !_soloMejorCalificadas || cafe.calificacion >= 4.5;
-      return cumpleWifi && cumpleCalificacion;
+      final cumplePrecio = !_soloEconomicas || cafe.precio <= 2.00;
+      return cumpleWifi && cumpleCalificacion && cumplePrecio;
     }).toList();
     final (promedio, conWifi) = resumen(visibles);
 
@@ -85,11 +87,15 @@ class _CafeScreenState extends State<CafeScreen> {
               conWifi: conWifi,
               soloWifi: _soloWifi,
               soloMejorCalificadas: _soloMejorCalificadas,
+              soloEconomicas: _soloEconomicas,
               onToogleWifi: (value) => setState(() {
                 _soloWifi = value;
               }),
               onToogleMejorCalificadas: (value) => setState(() {
                 _soloMejorCalificadas = value;
+              }),
+              onToogleEconomicas: (value) => setState(() {
+                _soloEconomicas = value;
               }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
@@ -113,6 +119,7 @@ class _CafeScreenState extends State<CafeScreen> {
         onAccion: () => setState(() {
           _soloWifi = false;
           _soloMejorCalificadas = false;
+          _soloEconomicas = false;
         }),
       );
     }

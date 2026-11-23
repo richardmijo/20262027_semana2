@@ -6,8 +6,10 @@ class CabeceraResumen extends StatelessWidget {
   final int conWifi;
   final bool soloWifi;
   final bool soloMejorCalificadas;
+  final bool soloEconomicas;
   final ValueChanged<bool> onToogleWifi;
   final ValueChanged<bool> onToogleMejorCalificadas;
+  final ValueChanged<bool> onToogleEconomicas;
 
   const CabeceraResumen({
     super.key,
@@ -16,8 +18,10 @@ class CabeceraResumen extends StatelessWidget {
     required this.conWifi,
     required this.soloWifi,
     required this.soloMejorCalificadas,
+    required this.soloEconomicas,
     required this.onToogleWifi,
     required this.onToogleMejorCalificadas,
+    required this.onToogleEconomicas,
   });
 
   @override
@@ -75,6 +79,13 @@ class CabeceraResumen extends StatelessWidget {
                     value: soloMejorCalificadas,
                     onChanged: onToogleMejorCalificadas,
                   ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Hasta \$2.00'),
+                  Switch(value: soloEconomicas, onChanged: onToogleEconomicas),
                 ],
               ),
             ],
