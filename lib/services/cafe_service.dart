@@ -4,13 +4,17 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:semana2/models/cafe_model.dart';
 
-class CafeService {
+class CafeService {                   
   late final Dio _dio;
 
   // Endpoint 100% estable, sin caídas y con CORS habilitado (GitHub Raw)
   static const String _baseUrl = 'https://raw.githubusercontent.com';
   static const String _coffeEndpoint =
       '/richardmijo/20262027_semana2/main/cafes.json';
+
+  /// Mensaje que se muestra cuando no hay conexión a internet. La pantalla lo
+  /// usa para distinguir el error de conexión de otros errores.
+  static const String mensajeSinConexion = 'No hay conexión a internet';
 
   CafeService() {
     _dio = Dio(
@@ -72,7 +76,7 @@ class CafeService {
         return 'El servidor tardó demasiado';
 
       case DioExceptionType.connectionError:
-        return 'No hay conexión a internet';
+        return mensajeSinConexion;
 
       case DioExceptionType.badResponse:
         return 'Error en el servidor: ${error.response?.statusCode ?? ''}';
@@ -82,26 +86,6 @@ class CafeService {
 
       default:
         return 'Error en la red';
-    }
-  }
-  String _interpretarDioError(DioException error) {
-    switch(error.type){
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return'El servidor tardó demasiado';
-
-      case DioExceptionType.connectionError:
-        return 'No hay conexión a internet';
-
-      case DioExceptionType.badResponse:
-        return 'Error en el servidor.';
-
-      case DioExceptionType.cancel:
-        return 'La petición fue cancelada';
-
-      default:
-        return 'Error en la red.';
     }
   }
 }

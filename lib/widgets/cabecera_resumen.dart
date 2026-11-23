@@ -6,6 +6,8 @@ class CabeceraResumen extends StatelessWidget {
   final int conWifi;
   final bool soloWifi;
   final ValueChanged<bool> onToogleWifi;
+  final bool soloMejorCalificadas;
+  final ValueChanged<bool> onToogleMejorCalificadas;
 
   const CabeceraResumen({
     super.key,
@@ -14,12 +16,26 @@ class CabeceraResumen extends StatelessWidget {
     required this.conWifi,
     required this.soloWifi,
     required this.onToogleWifi,
+    required this.soloMejorCalificadas,
+    required this.onToogleMejorCalificadas,
   });
 
   @override
   Widget build(BuildContext context) {
     final colores = Theme.of(context).colorScheme;
 
+    // La cabecera ocupa espacio fijo sobre la lista: se limita su escalado de
+    // texto para que con la letra al máximo no desborde la pantalla ni deje
+    // la lista sin espacio.
+    final escala = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3);
+
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(textScaler: escala),
+      child: _construir(context, colores),
+    );
+  }
+
+  Widget _construir(BuildContext context, ColorScheme colores) {
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.all(8),
@@ -56,10 +72,18 @@ class CabeceraResumen extends StatelessWidget {
           ),
           Divider(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Filtrar solo con Wi-Fi'),
+              const Expanded(child: Text('Filtrar solo con Wi-Fi')),
               Switch(value: soloWifi, onChanged: onToogleWifi),
+            ],
+          ),
+          Row(
+            children: [
+              const Expanded(child: Text('Mejor calificadas')),
+              Switch(
+                value: soloMejorCalificadas,
+                onChanged: onToogleMejorCalificadas,
+              ),
             ],
           ),
         ],

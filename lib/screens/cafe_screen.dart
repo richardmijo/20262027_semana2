@@ -23,7 +23,11 @@ class _CafeScreenState extends State<CafeScreen> {
 
   // filtros
   bool _soloWifi = false;
+  bool _soloMejorCalificadas = false;
   int _visitas = 0;
+
+  // Calificación mínima para el filtro "Mejor calificadas"
+  static const double _calificacionMinima = 4.5;
 
   @override
   void initState() {
@@ -56,7 +60,14 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
+    // Ambos filtros se combinan (AND) cuando están activos.
+    final visibles = _cafes
+        .where(
+          (c) =>
+              (!_soloWifi || c.tieneWifi) &&
+              (!_soloMejorCalificadas || c.calificacion >= _calificacionMinima),
+        )
+        .toList();
     final (promedio, conWifi) = resumen(_cafes);
 
     return Scaffold(
@@ -85,6 +96,10 @@ class _CafeScreenState extends State<CafeScreen> {
               onToogleWifi: (val) => setState(() {
                 _soloWifi = val;
               }),
+              soloMejorCalificadas: _soloMejorCalificadas,
+              onToogleMejorCalificadas: (val) => setState(() {
+                _soloMejorCalificadas = val;
+              }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
         ],
@@ -104,13 +119,19 @@ class _CafeScreenState extends State<CafeScreen> {
     }
     // Estado 2: Error
     if (_error != null) {
-      return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
+      return EstadoError(
+        mensaje: _error!,
+        esErrorConexion: _error == CafeService.mensajeSinConexion,
+        onReintentar: _cargarCafes,
+      );
     }
-    // Estado 3: Vacio
+    // Estado 3: Vacio (los filtros se mantienen activos hasta que el usuario
+    // los quite manualmente)
     if (visibles.isEmpty) {
       return EstadoVacio(
         onAccion: () => setState(() {
           _soloWifi = false;
+          _soloMejorCalificadas = false;
         }),
       );
     }

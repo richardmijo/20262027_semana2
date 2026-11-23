@@ -44,6 +44,25 @@ class TarjetaCafe extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
+                const Icon(Icons.place_outlined, size: 14, color: Colors.grey),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    cafe.direccion,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            // Wrap evita overflow cuando el tamaño de letra es máximo.
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 2,
+              children: [
                 Text(
                   cafe.precio.usd,
                   style: const TextStyle(
@@ -51,26 +70,27 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
           ],
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
-          ],
+        // FittedBox reduce el bloque si la letra es muy grande (evita overflow)
+        trailing: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              const Icon(Icons.touch_app, size: 16, color: Colors.grey),
+            ],
+          ),
         ),
         onTap: alVisitar,
       ),
