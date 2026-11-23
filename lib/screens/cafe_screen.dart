@@ -7,6 +7,10 @@ import 'package:semana2/widgets/tarjeta_cafe.dart';
 
 import '../utils/cafe_helpers.dart';
 
+// Nota mínima para el filtro "Mejor calificadas".
+// Para probar el estado vacío, cámbiala a 5.0 temporalmente y vuelve a 4.5.
+const double notaMinima = 4.5;
+
 class CafeScreen extends StatefulWidget {
   const CafeScreen({super.key});
 
@@ -23,6 +27,7 @@ class _CafeScreenState extends State<CafeScreen> {
 
   // filtros
   bool _soloWifi = false;
+  bool _soloMejorCalificadas = false;
   int _visitas = 0;
 
   @override
@@ -48,7 +53,7 @@ class _CafeScreenState extends State<CafeScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = e.toString().replaceFirst('Exception: ', '');
         _cargando = false;
       });
     }
@@ -56,7 +61,13 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
+    // Los dos filtros se aplican al mismo tiempo (AND)
+    final visibles = _cafes.where((cafe) {
+      final cumpleWifi = !_soloWifi || cafe.tieneWifi;
+      final cumpleNota =
+          !_soloMejorCalificadas || cafe.calificacion >= notaMinima;
+      return cumpleWifi && cumpleNota;
+    }).toList();
     final (promedio, conWifi) = resumen(_cafes);
 
     return Scaffold(
@@ -85,6 +96,11 @@ class _CafeScreenState extends State<CafeScreen> {
               onToogleWifi: (val) => setState(() {
                 _soloWifi = val;
               }),
+              soloMejorCalificadas: _soloMejorCalificadas,
+              onToogleMejorCalificadas: (val) => setState(() {
+                _soloMejorCalificadas = val;
+              }),
+              notaMinima: notaMinima,
             ),
           Expanded(child: _construirCuerpo(visibles)),
         ],
@@ -109,8 +125,11 @@ class _CafeScreenState extends State<CafeScreen> {
     // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
+        mensaje: 'No hay cafeterías con estos filtros. Prueba quitando uno.',
+        etiquetaAccion: 'Quitar filtros',
         onAccion: () => setState(() {
           _soloWifi = false;
+          _soloMejorCalificadas = false;
         }),
       );
     }

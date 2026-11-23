@@ -43,7 +43,7 @@ class EstadoError extends StatelessWidget {
             Icon(Icons.cloud_off, size: 70, color: Colors.redAccent),
             SizedBox(height: 16),
             Text(
-              '¡Ups! No pudimos obtenes los cafes',
+              '¡Ups! No pudimos obtener los cafés',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
@@ -76,9 +76,9 @@ class EstadoVacio extends StatelessWidget {
 
   const EstadoVacio({
     super.key,
-    this.mensaje = 'No hay cafeterías que coincidan con el filtro.',
+    this.mensaje = 'No hay cafeterías con estos filtros.',
     required this.onAccion,
-    this.etiquetaAccion = 'Quitar filtro de Wi-Fi',
+    this.etiquetaAccion = 'Quitar filtros',
   });
 
   @override

@@ -16,6 +16,7 @@ class TarjetaCafe extends StatelessWidget {
       elevation: 2,
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       child: ListTile(
+        isThreeLine: true,
         leading: cafe.imagenUrl != null
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -41,8 +42,42 @@ class TarjetaCafe extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
+            const SizedBox(height: 6),
+            // Datos nuevos que ya venían en el JSON: dirección y horario
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.place_outlined, size: 16, color: Colors.brown),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    cafe.direccion,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 4),
             Row(
+              children: [
+                const Icon(Icons.schedule, size: 16, color: Colors.brown),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    cafe.horario,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            // Wrap baja a otra línea si la letra está grande (sin franja amarilla)
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,26 +86,25 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
                 Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
           ],
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
-          ],
+        trailing: FittedBox(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              const Icon(Icons.touch_app, size: 16, color: Colors.grey),
+            ],
+          ),
         ),
         onTap: alVisitar,
       ),
