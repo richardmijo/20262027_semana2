@@ -9,13 +9,20 @@ class EstadoCargando extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text(mensaje, style: TextStyle(fontSize: 16, color: Colors.grey)),
-        ],
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
+            Text(
+              mensaje,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -35,31 +42,29 @@ class EstadoError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.0),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_off, size: 70, color: Colors.redAccent),
-            SizedBox(height: 16),
-            Text(
-              '¡Ups! No pudimos obtenes los cafes',
+            const Icon(Icons.cloud_off, size: 70, color: Colors.redAccent),
+            const SizedBox(height: 16),
+            const Text(
+              '¡Ups! No pudimos obtener los cafés',
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-
+            const SizedBox(height: 8),
             Text(
               mensaje,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.black54),
+              style: const TextStyle(color: Colors.black54),
             ),
-
-            SizedBox(height: 24),
-
+            const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onReintentar,
-              label: Text('Reintentar conexión'),
-              icon: Icon(Icons.replay),
+              label: const Text('Reintentar conexión'),
+              icon: const Icon(Icons.replay),
             ),
           ],
         ),
@@ -76,23 +81,30 @@ class EstadoVacio extends StatelessWidget {
 
   const EstadoVacio({
     super.key,
-    this.mensaje = 'No hay cafeterías que coincidan con el filtro.',
+    this.mensaje = 'No hay cafeterías que coincidan con los filtros.',
     required this.onAccion,
-    this.etiquetaAccion = 'Quitar filtro de Wi-Fi',
+    this.etiquetaAccion = 'Quitar filtros',
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.search_off, size: 64, color: Colors.orange),
-          const SizedBox(height: 12),
-          Text(mensaje, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 8),
-          TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
-        ],
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.search_off, size: 64, color: Colors.orange),
+            const SizedBox(height: 12),
+            Text(
+              mensaje,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
+          ],
+        ),
       ),
     );
   }

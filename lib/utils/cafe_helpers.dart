@@ -1,8 +1,25 @@
 // extensiones
 import 'package:semana2/models/cafe_model.dart';
 
+const double calificacionMinima = 4.5;
+
 extension Moneda on double {
   String get usd => '\$${toStringAsFixed(2)}';
+}
+
+// FILTROS COMBINADOS
+List<CafeModel> filtrarCafes(
+  List<CafeModel> lista, {
+  required bool soloWifi,
+  required bool mejorCalificadas,
+}) {
+  return lista
+      .where(
+        (c) =>
+            (!soloWifi || c.tieneWifi) &&
+            (!mejorCalificadas || c.calificacion >= calificacionMinima),
+      )
+      .toList();
 }
 
 // SWITCH
