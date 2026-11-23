@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/cafe_screen.dart';
+import 'package:semana2/screens/cafe_screen.dart';
 
 void main() => runApp(const CafesLojaApp());
 
@@ -11,10 +11,7 @@ class CafesLojaApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cafés de Loja',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.brown,
-      ),
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.brown),
       home: const CafeScreen(),
     );
   }

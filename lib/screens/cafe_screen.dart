@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:semana2/models/cafe_model.dart';
 import 'package:semana2/services/cafe_service.dart';
+import 'package:semana2/utils/cafe_helpers.dart';
 import 'package:semana2/widgets/cabecera_resumen.dart';
 import 'package:semana2/widgets/estados_vista.dart';
 import 'package:semana2/widgets/tarjeta_cafe.dart';
-
-import '../utils/cafe_helpers.dart';
 
 class CafeScreen extends StatefulWidget {
   const CafeScreen({super.key});
@@ -20,9 +19,8 @@ class _CafeScreenState extends State<CafeScreen> {
   bool _cargando = true;
   String? _error;
   List<CafeModel> _cafes = [];
-
-  // filtros
   bool _soloWifi = false;
+  bool _soloMejorCalificadas = false;
   int _visitas = 0;
 
   @override
@@ -40,7 +38,6 @@ class _CafeScreenState extends State<CafeScreen> {
     try {
       final resultado = await _cafeService.obtenerCafes();
       if (!mounted) return;
-
       setState(() {
         _cafes = resultado;
         _cargando = false;
@@ -56,19 +53,24 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
-    final (promedio, conWifi) = resumen(_cafes);
+    final visibles = _cafes.where((cafe) {
+      final cumpleWifi = !_soloWifi || cafe.tieneWifi;
+      final cumpleCalificacion =
+          !_soloMejorCalificadas || cafe.calificacion >= 4.5;
+      return cumpleWifi && cumpleCalificacion;
+    }).toList();
+    final (promedio, conWifi) = resumen(visibles);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cafes de Loja'),
+        title: const Text('Cafés de Loja'),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child: Center(
               child: Badge(
                 label: Text('$_visitas'),
-                child: Icon(Icons.place_outlined),
+                child: const Icon(Icons.place_outlined),
               ),
             ),
           ),
@@ -78,12 +80,16 @@ class _CafeScreenState extends State<CafeScreen> {
         children: [
           if (!_cargando && _error == null)
             CabeceraResumen(
-              total: _cafes.length,
+              total: visibles.length,
               promedio: promedio,
               conWifi: conWifi,
               soloWifi: _soloWifi,
-              onToogleWifi: (val) => setState(() {
-                _soloWifi = val;
+              soloMejorCalificadas: _soloMejorCalificadas,
+              onToogleWifi: (value) => setState(() {
+                _soloWifi = value;
+              }),
+              onToogleMejorCalificadas: (value) => setState(() {
+                _soloMejorCalificadas = value;
               }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
@@ -91,30 +97,26 @@ class _CafeScreenState extends State<CafeScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _cargarCafes,
-        label: Text('Recargar API'),
-        icon: Icon(Icons.refresh),
+        label: const Text('Recargar API'),
+        icon: const Icon(Icons.refresh),
       ),
     );
   }
 
   Widget _construirCuerpo(List<CafeModel> visibles) {
-    // Etado 1: cargando
-    if (_cargando) {
-      return EstadoCargando();
-    }
-    // Estado 2: Error
+    if (_cargando) return const EstadoCargando();
     if (_error != null) {
       return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-    // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
         onAccion: () => setState(() {
           _soloWifi = false;
+          _soloMejorCalificadas = false;
         }),
       );
     }
-    // Estado 4: los datos
+
     return RefreshIndicator(
       onRefresh: _cargarCafes,
       child: ListView.builder(
@@ -123,11 +125,9 @@ class _CafeScreenState extends State<CafeScreen> {
           final cafe = visibles[index];
           return TarjetaCafe(
             cafe: cafe,
-            alVisitar: () {
-              setState(() {
-                _visitas++;
-              });
-            },
+            alVisitar: () => setState(() {
+              _visitas++;
+            }),
           );
         },
       ),

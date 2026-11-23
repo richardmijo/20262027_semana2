@@ -7,7 +7,7 @@ import 'package:semana2/models/cafe_model.dart';
 class CafeService {
   late final Dio _dio;
 
-  // Endpoint 100% estable, sin caídas y con CORS habilitado (GitHub Raw)
+  // Endpoint estable servido desde GitHub Raw.
   static const String _baseUrl = 'https://raw.githubusercontent.com';
   static const String _coffeEndpoint =
       '/richardmijo/20262027_semana2/main/cafes.json';
@@ -28,7 +28,9 @@ class CafeService {
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          log('✅ [DIO Response ${response.statusCode}] desde ${response.requestOptions.path}');
+          log(
+            '✅ [DIO Response ${response.statusCode}] desde ${response.requestOptions.path}',
+          );
           return handler.next(response);
         },
         onError: (error, handler) {
@@ -43,12 +45,10 @@ class CafeService {
     try {
       final response = await _dio.get(_coffeEndpoint);
       if (response.statusCode == 200) {
-        // Maneja tanto List directo como String serializado en texto plano
         final dynamic raw = response.data;
         final List<dynamic> data = raw is String
             ? jsonDecode(raw) as List<dynamic>
             : raw as List<dynamic>;
-
         return data
             .map((item) => CafeModel.fromJson(item as Map<String, dynamic>))
             .toList();
