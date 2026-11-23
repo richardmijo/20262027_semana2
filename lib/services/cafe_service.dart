@@ -54,30 +54,12 @@ class CafeService {
             .toList();
       } else {
         throw Exception(
-<<<<<<< HEAD
-          'El servidor respondio con codigo ${reponse.statusCode}',
-=======
           'El servidor respondió con código ${response.statusCode}',
->>>>>>> origin/main
         );
       }
     } on DioException catch (dioError) {
       throw Exception(_interpretarDioError(dioError));
     } catch (e) {
-<<<<<<< HEAD
-      throw Exception('Ocurrio un error inesperado al procesar los datos');
-    }
-  }
-
-  String _interpretarDioError(DioException error) { //se usa _ guion bajo para métodos privados
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-
-      case DioExceptionType.sendTimeout:
-
-      case DioExceptionType.receiveTimeout:
-        return 'Tiempo de recepcion agotado';
-=======
       throw Exception('Ocurrió un error inesperado al procesar los datos: $e');
     }
   }
@@ -88,17 +70,12 @@ class CafeService {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
         return 'El servidor tardó demasiado';
->>>>>>> origin/main
 
       case DioExceptionType.connectionError:
         return 'No hay conexión a internet';
 
       case DioExceptionType.badResponse:
-<<<<<<< HEAD
-        return 'Error en el servidor';
-=======
         return 'Error en el servidor: ${error.response?.statusCode ?? ''}';
->>>>>>> origin/main
 
       case DioExceptionType.cancel:
         return 'La petición fue cancelada';

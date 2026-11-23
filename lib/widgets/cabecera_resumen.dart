@@ -18,19 +18,6 @@ class CabeceraResumen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    final colores = Theme.of(context).colorScheme; //busca el tema de la aplicación y obtiene la paleta de colores
-
-    return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, //dependiendo la configuración del teléfono, el texto puede estar alineado a la izquierda o a la derecha
-        children: [
-          Row(
-            children:[
-=======
     final colores = Theme.of(context).colorScheme;
 
     return Container(
@@ -45,7 +32,6 @@ class CabeceraResumen extends StatelessWidget {
         children: [
           Row(
             children: [
->>>>>>> origin/main
               Icon(
                 Icons.coffee_rounded,
                 size: 36,
@@ -53,26 +39,6 @@ class CabeceraResumen extends StatelessWidget {
               ),
               SizedBox(width: 12),
 
-<<<<<<< HEAD
-              Expanded(child: Text('$total Cafeterías disponibles', 
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color:colores.onPrimaryContainer,
-              fontWeight: FontWeight.bold),)
-              ),
-            ]
-          ),
-        SizedBox(height: 16),
-        Text('Calificación promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-fi',
-        ),
-        Divider(height:20,),
-        Row(
-         mainAxisAlignment: MainAxisAlignment.spaceBetween, //ocupar todo el espacio de forma vertical y separar los elementos
-         children: [
-          Text('Filtrar solo con Wi-fi'),
-          Switch(value:soloWifi, onChanged: onToogleWifi)
-         ],
-         ),
-=======
               Expanded(
                 child: Text(
                   '$total Cafeterias disponibles',
@@ -96,7 +62,6 @@ class CabeceraResumen extends StatelessWidget {
               Switch(value: soloWifi, onChanged: onToogleWifi),
             ],
           ),
->>>>>>> origin/main
         ],
       ),
     );
