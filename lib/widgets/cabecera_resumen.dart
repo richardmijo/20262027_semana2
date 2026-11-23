@@ -21,9 +21,12 @@ class CabeceraResumen extends StatelessWidget {
     final colores = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: colores.primaryContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -49,13 +52,13 @@ class CabeceraResumen extends StatelessWidget {
           ),
           SizedBox(height: 16),
           Text(
-            'Calificación promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wifi',
+            'Calificacion promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
           ),
           Divider(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Filtrar solo con Wi-fi'),
+              Text('Filtrar solo con Wi-Fi'),
               Switch(value: soloWifi, onChanged: onToogleWifi),
             ],
           ),
