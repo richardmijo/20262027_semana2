@@ -22,7 +22,9 @@ class _CafeScreenState extends State<CafeScreen> {
   List<CafeModel> _cafes = [];
 
   // filtros
+  static const double _calificacionMinima = 4.5;
   bool _soloWifi = false;
+  bool _soloMejores = false;
   int _visitas = 0;
 
   @override
@@ -56,7 +58,11 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
+    // Los dos filtros se combinan: la cafetería debe cumplir ambos
+    final visibles = _cafes
+        .where((c) => !_soloWifi || c.tieneWifi)
+        .where((c) => !_soloMejores || c.calificacion >= _calificacionMinima)
+        .toList();
     final (promedio, conWifi) = resumen(_cafes);
 
     return Scaffold(
@@ -85,6 +91,10 @@ class _CafeScreenState extends State<CafeScreen> {
               onToogleWifi: (val) => setState(() {
                 _soloWifi = val;
               }),
+              soloMejores: _soloMejores,
+              onToggleMejores: (val) => setState(() {
+                _soloMejores = val;
+              }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
         ],
@@ -109,8 +119,11 @@ class _CafeScreenState extends State<CafeScreen> {
     // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
+        mensaje: _mensajeVacio(),
+        etiquetaAccion: 'Quitar filtros',
         onAccion: () => setState(() {
           _soloWifi = false;
+          _soloMejores = false;
         }),
       );
     }
@@ -118,6 +131,7 @@ class _CafeScreenState extends State<CafeScreen> {
     return RefreshIndicator(
       onRefresh: _cargarCafes,
       child: ListView.builder(
+        padding: EdgeInsets.only(bottom: 80), // espacio para el botón flotante
         itemCount: visibles.length,
         itemBuilder: (context, index) {
           final cafe = visibles[index];
@@ -132,5 +146,14 @@ class _CafeScreenState extends State<CafeScreen> {
         },
       ),
     );
+  }
+
+  String _mensajeVacio() {
+    if (_cafes.isEmpty) return 'La API no devolvió cafeterías.';
+    if (_soloWifi && _soloMejores) {
+      return 'Ninguna cafetería tiene Wi-Fi y calificación de 4,5 o más.';
+    }
+    if (_soloMejores) return 'Ninguna cafetería tiene calificación de 4,5 o más.';
+    return 'No hay cafeterías con Wi-Fi.';
   }
 }

@@ -35,7 +35,7 @@ class EstadoError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +43,8 @@ class EstadoError extends StatelessWidget {
             Icon(Icons.cloud_off, size: 70, color: Colors.redAccent),
             SizedBox(height: 16),
             Text(
-              '¡Ups! No pudimos obtenes los cafes',
+              '¡Ups! No pudimos obtener los cafés',
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
@@ -84,15 +85,22 @@ class EstadoVacio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.search_off, size: 64, color: Colors.orange),
-          const SizedBox(height: 12),
-          Text(mensaje, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 8),
-          TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
-        ],
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.search_off, size: 64, color: Colors.orange),
+            const SizedBox(height: 12),
+            Text(
+              mensaje,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            TextButton(onPressed: onAccion, child: Text(etiquetaAccion)),
+          ],
+        ),
       ),
     );
   }

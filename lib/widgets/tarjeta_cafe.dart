@@ -42,7 +42,25 @@ class TarjetaCafe extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
+            // DATO NUEVO: dirección que viene del JSON ("direccion")
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Icon(Icons.location_on_outlined, size: 14),
+                ),
+                const SizedBox(width: 4),
+                Expanded(child: Text(cafe.direccion)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            // Wrap en vez de Row: si la letra es grande, baja de línea
+            // en lugar de mostrar la franja amarilla de desborde.
+            Wrap(
+              spacing: 8,
+              runSpacing: 2,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   cafe.precio.usd,
@@ -51,27 +69,16 @@ class TarjetaCafe extends StatelessWidget {
                     color: Colors.green,
                   ),
                 ),
-                const SizedBox(width: 8),
+                Text('⭐ ${cafe.calificacion.toStringAsFixed(1)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text('• ${etiqueta(cafe.calificacion)}'),
-                if (cafe.tieneWifi) ...[
-                  const SizedBox(width: 6),
+                if (cafe.tieneWifi)
                   const Icon(Icons.wifi, size: 14, color: Colors.blue),
-                ],
               ],
             ),
           ],
         ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '⭐ ${cafe.calificacion.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Icon(Icons.touch_app, size: 16, color: Colors.grey),
-          ],
-        ),
+        trailing: const Icon(Icons.touch_app, size: 16, color: Colors.grey),
         onTap: alVisitar,
       ),
     );
