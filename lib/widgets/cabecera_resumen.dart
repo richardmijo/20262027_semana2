@@ -21,9 +21,12 @@ class CabeceraResumen extends StatelessWidget {
     final colores = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: colores.primaryContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,7 +41,7 @@ class CabeceraResumen extends StatelessWidget {
 
               Expanded(
                 child: Text(
-                  '$total Cafeterias Disponibles',
+                  '$total Cafeterias disponibles',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: colores.onPrimaryContainer,
                     fontWeight: FontWeight.bold,

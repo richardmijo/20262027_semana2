@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:semana2/services/cafe_service.dart';
 import 'package:semana2/models/cafe_model.dart';
+import 'package:semana2/services/cafe_service.dart';
 import 'package:semana2/widgets/cabecera_resumen.dart';
 import 'package:semana2/widgets/estados_vista.dart';
 import 'package:semana2/widgets/tarjeta_cafe.dart';
+
 import '../utils/cafe_helpers.dart';
 
 class CafeScreen extends StatefulWidget {
@@ -14,13 +15,13 @@ class CafeScreen extends StatefulWidget {
 }
 
 class _CafeScreenState extends State<CafeScreen> {
-  final CafeService _CafeService = CafeService();
+  final CafeService _cafeService = CafeService();
 
   bool _cargando = true;
   String? _error;
   List<CafeModel> _cafes = [];
 
-  //filtros
+  // filtros
   bool _soloWifi = false;
   int _visitas = 0;
 
@@ -32,24 +33,22 @@ class _CafeScreenState extends State<CafeScreen> {
 
   Future<void> _cargarCafes() async {
     setState(() {
-      //cada q hago setstate se llama al build
       _cargando = true;
       _error = null;
     });
 
     try {
-      final resultado = await _CafeService.obtenerCafes();
-      if (!mounted) return; //controlar si el usuario cambia de pantalla mientras se carga la información, si no está montado, no se hace nada
+      final resultado = await _cafeService.obtenerCafes();
+      if (!mounted) return;
 
       setState(() {
-        //si el usuario sigue en la pantalla, se actualiza el estado con los datos obtenidos
         _cafes = resultado;
         _cargando = false;
       });
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = e.toString().replaceFirst('Exception: ', '');
         _cargando = false;
       });
     }
@@ -57,20 +56,19 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles =
-        _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
+    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
     final (promedio, conWifi) = resumen(_cafes);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cafés de Loja'),
+        title: Text('Cafes de Loja'),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
             child: Center(
               child: Badge(
                 label: Text('$_visitas'),
-                child: Icon(Icons.coffee_rounded),
+                child: Icon(Icons.place_outlined),
               ),
             ),
           ),
@@ -100,18 +98,15 @@ class _CafeScreenState extends State<CafeScreen> {
   }
 
   Widget _construirCuerpo(List<CafeModel> visibles) {
-    //ESTADO 1_ CARGANDO
+    // Etado 1: cargando
     if (_cargando) {
-      return const EstadoCargando();
+      return EstadoCargando();
     }
-    // ESTADO 2: ERROR
+    // Estado 2: Error
     if (_error != null) {
-      return EstadoError(
-        mensaje: _error!,
-        onReintentar: _cargarCafes,
-      );
+      return EstadoError(mensaje: _error!, onReintentar: _cargarCafes);
     }
-    //ESTADO 3: VACIO
+    // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
         onAccion: () => setState(() {
@@ -119,8 +114,7 @@ class _CafeScreenState extends State<CafeScreen> {
         }),
       );
     }
-
-    //ESTADO 4: LISTA DE CAFES
+    // Estado 4: los datos
     return RefreshIndicator(
       onRefresh: _cargarCafes,
       child: ListView.builder(
