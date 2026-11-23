@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:semana2/models/cafe_model.dart';
 import 'package:semana2/services/cafe_service.dart';
@@ -6,6 +8,7 @@ import 'package:semana2/widgets/estados_vista.dart';
 import 'package:semana2/widgets/tarjeta_cafe.dart';
 
 import '../utils/cafe_helpers.dart';
+import '../utils/conexion.dart';
 
 class CafeScreen extends StatefulWidget {
   const CafeScreen({super.key});
@@ -23,12 +26,36 @@ class _CafeScreenState extends State<CafeScreen> {
 
   // filtros
   bool _soloWifi = false;
+  bool _soloMejores = false;
   int _visitas = 0;
+
+  StreamSubscription<bool>? _conexionSub;
 
   @override
   void initState() {
     super.initState();
     _cargarCafes();
+
+    // Reacciona solo cuando se pierde o vuelve la conexión.
+    _conexionSub = cambiosDeConexion().listen((hayConexion) {
+      if (!mounted) return;
+      if (hayConexion) {
+        // Volvió el internet: si estaba en error, recarga automáticamente.
+        if (_error != null) _cargarCafes();
+      } else {
+        // Se perdió el internet: muestra el estado de error sin recargar.
+        setState(() {
+          _error = 'No hay conexión a internet';
+          _cargando = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _conexionSub?.cancel();
+    super.dispose();
   }
 
   Future<void> _cargarCafes() async {
@@ -56,7 +83,11 @@ class _CafeScreenState extends State<CafeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final visibles = _cafes.where((c) => !_soloWifi || c.tieneWifi).toList();
+    // Los dos filtros se combinan con AND: un café debe cumplir los que estén activos.
+    final visibles = _cafes
+        .where((c) => !_soloWifi || c.tieneWifi)
+        .where((c) => !_soloMejores || c.calificacion >= 4.5)
+        .toList();
     final (promedio, conWifi) = resumen(_cafes);
 
     return Scaffold(
@@ -78,12 +109,17 @@ class _CafeScreenState extends State<CafeScreen> {
         children: [
           if (!_cargando && _error == null)
             CabeceraResumen(
+              mostrando: visibles.length,
               total: _cafes.length,
               promedio: promedio,
               conWifi: conWifi,
               soloWifi: _soloWifi,
               onToogleWifi: (val) => setState(() {
                 _soloWifi = val;
+              }),
+              soloMejores: _soloMejores,
+              onToogleMejores: (val) => setState(() {
+                _soloMejores = val;
               }),
             ),
           Expanded(child: _construirCuerpo(visibles)),
@@ -109,8 +145,10 @@ class _CafeScreenState extends State<CafeScreen> {
     // Estado 3: Vacio
     if (visibles.isEmpty) {
       return EstadoVacio(
+        etiquetaAccion: 'Quitar filtros',
         onAccion: () => setState(() {
           _soloWifi = false;
+          _soloMejores = false;
         }),
       );
     }

@@ -41,7 +41,12 @@ class CafeService {
 
   Future<List<CafeModel>> obtenerCafes() async {
     try {
-      final response = await _dio.get(_coffeEndpoint);
+      // El parámetro 't' cambia en cada petición para que el navegador no
+      // reutilice la respuesta guardada en caché (GitHub Raw la cachea 5 min).
+      final response = await _dio.get(
+        _coffeEndpoint,
+        queryParameters: {'t': DateTime.now().millisecondsSinceEpoch},
+      );
       if (response.statusCode == 200) {
         // Maneja tanto List directo como String serializado en texto plano
         final dynamic raw = response.data;
@@ -76,27 +81,6 @@ class CafeService {
 
       case DioExceptionType.badResponse:
         return 'Error en el servidor: ${error.response?.statusCode ?? ''}';
-
-      case DioExceptionType.cancel:
-        return 'La petición fue cancelada';
-
-      default:
-        return 'Error en la red';
-    }
-  }
-
-  String _interpretarDioError(DioException error) {
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return 'El servidor tardó demasiado';
-
-      case DioExceptionType.connectionError:
-        return 'No hay conexión a internet';
-
-      case DioExceptionType.badResponse:
-        return 'Error en el servidor';
 
       case DioExceptionType.cancel:
         return 'La petición fue cancelada';

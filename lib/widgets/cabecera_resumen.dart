@@ -6,14 +6,20 @@ class CabeceraResumen extends StatelessWidget {
   final int conWifi;
   final bool soloWifi;
   final ValueChanged<bool> onToogleWifi;
+  final bool soloMejores;
+  final ValueChanged<bool> onToogleMejores;
+  final int mostrando;
 
   const CabeceraResumen({
     super.key,
+    required this.mostrando,
     required this.total,
     required this.promedio,
     required this.conWifi,
     required this.soloWifi,
     required this.onToogleWifi,
+    required this.soloMejores,
+    required this.onToogleMejores,
   });
 
   @override
@@ -54,12 +60,37 @@ class CabeceraResumen extends StatelessWidget {
           Text(
             'Calificacion promedio ${promedio.toStringAsFixed(1)} - $conWifi con Wi-Fi',
           ),
+          // Muestra cuántos cafés quedan después de aplicar los filtros.
+          Text(
+            'Mostrando $mostrando de $total',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           Divider(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Filtrar solo con Wi-Fi'),
+              const Icon(Icons.wifi),
+              const SizedBox(width: 12),
+              Expanded(child: Text('Filtrar solo con Wi-Fi')),
               Switch(value: soloWifi, onChanged: onToogleWifi),
+            ],
+          ),
+          Row(
+            children: [
+              const Icon(Icons.star),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Mejor calificadas'),
+                    Text(
+                      'Calificación de 4,5 o más',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              Switch(value: soloMejores, onChanged: onToogleMejores),
             ],
           ),
         ],
